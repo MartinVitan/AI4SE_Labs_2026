@@ -1,5 +1,6 @@
 # To run this script, a file with predictions of SQL queries must be provided in the same format as the labels file. The script will execute each predicted SQL query against a database constructed from the provided schema and data, and compare the results to the expected results from the labels file. The accuracy of the predictions will be calculated and printed.
 
+import argparse
 import csv
 import json
 import re
@@ -83,11 +84,17 @@ def load_database():
     return connection
 
 
-def row_multiset(rows):
-    return Counter(tuple(row) for row in rows)
+def restaurant_name_multiset(rows, name_column_index):
+    if not rows:
+        return Counter()
+    if name_column_index is None or any(
+        name_column_index >= len(row) for row in rows
+    ):
+        return None
+    return Counter(row[name_column_index] for row in rows)
 
 
-def main():
+def evaluate_predictions(predictions_path=PREDICTIONS_PATH):
     csv.field_size_limit(1_000_000_000)
     labels_by_question = defaultdict(deque)
     with LABELS_PATH.open(encoding="utf-8", newline="") as source:
@@ -104,13 +111,20 @@ def main():
                     f"Expected a JSON array label result on line {line_number} "
                     f"of {LABELS_PATH}"
                 )
-            labels_by_question[row["question"]].append(result)
+            if any(not isinstance(label, list) or len(label) < 2 for label in result):
+                raise ValueError(
+                    f"Expected each label row to contain an ID and a name on line "
+                    f"{line_number} of {LABELS_PATH}"
+                )
+            labels_by_question[row["question"]].append(
+                [label[1] for label in result]
+            )
 
     connection = load_database()
     try:
         total = 0
         correct = 0
-        with PREDICTIONS_PATH.open(encoding="utf-8", newline="") as source:
+        with Path(predictions_path).open(encoding="utf-8", newline="") as source:
             for line_number, row in enumerate(csv.DictReader(source), start=2):
                 question = row["question"]
                 if not labels_by_question[question]:
@@ -121,17 +135,27 @@ def main():
 
                 expected_rows = labels_by_question[question].popleft()
                 try:
-                    predicted_rows = connection.execute(
-                        row["predicted_sql"]
-                    ).fetchall()
+                    query = connection.execute(row["predicted_sql"])
+                    predicted_rows = query.fetchall()
                 except sqlite3.Error as error:
                     raise RuntimeError(
                         f"Could not execute predicted SQL on line {line_number} "
-                        f"of {PREDICTIONS_PATH}"
+                        f"of {predictions_path}"
                     ) from error
 
                 total += 1
-                if row_multiset(predicted_rows) == row_multiset(expected_rows):
+                name_column_index = next(
+                    (
+                        index
+                        for index, column in enumerate(query.description or ())
+                        if column[0].casefold() == "name"
+                    ),
+                    None,
+                )
+                predicted_names = restaurant_name_multiset(
+                    predicted_rows, name_column_index
+                )
+                if predicted_names == Counter(expected_rows):
                     correct += 1
 
         unmatched_labels = sum(len(results) for results in labels_by_question.values())
@@ -143,11 +167,31 @@ def main():
         connection.close()
 
     if total == 0:
-        raise ValueError(f"No predictions found in {PREDICTIONS_PATH}")
+        raise ValueError(f"No predictions found in {predictions_path}")
+
+    return correct, total
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description=(
+            "Evaluate SQL predictions by exact restaurant-name match; "
+            "restaurant IDs are deliberately ignored."
+        )
+    )
+    parser.add_argument(
+        "--predictions",
+        type=Path,
+        default=PREDICTIONS_PATH,
+        help=f"CSV with question,predicted_sql (default: {PREDICTIONS_PATH})",
+    )
+    args = parser.parse_args()
+    correct, total = evaluate_predictions(args.predictions)
 
     accuracy = correct / total
     print(f"Accuracy: {accuracy:.4f} ({accuracy:.2%})")
     print(f"Correct: {correct}/{total}")
+    print("Metric: exact restaurant-name match")
 
 
 if __name__ == "__main__":
