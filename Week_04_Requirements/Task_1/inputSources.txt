@@ -1,0 +1,21 @@
+id,type,path,subject
+1|E-mails|conversations\conv_pines014_material_volume.eml|Discussion about volume of materials
+2|E-mails|conversations\conv_pines015_capacity_interface.eml|Discussion about branch capacity and dashboard
+3|E-mails|conversations\conv_pines016_shelf_space.eml|Discussion about usage of shelf space
+4|E-mails|conversations\conv_pines018_item_transfer.eml|Discussion about moving items between branches
+5|E-mails|conversations\conv_pines019_020_missing_intransit.eml|Discussion and clarification about missing or damaged items and items in transit
+6|E-mails|conversations\conv_pines021_item_purging.eml|Discussion and proposed security measures about getting rid of items, changes of states and copies
+7|E-mails|conversations\conv_pines022_deletions.eml|Discussion about deleting lists, verifying the scope
+8|E-mails|conversations\conv_pines023_patron_characteristics.eml|Discussion about verifying the purpose of reporting and characteristics of readers
+9|E-mails|conversations\conv_pines024_inactive_patrons.eml|Discussion about definition of activity and inactive readers
+10|Meeting record|meeting_minutes\meeting_2009-03-15_minutes.txt|Decisions about scope of project, goals and types of users
+11|Meeting record|meeting_minutes\meeting_2009-07-20_minutes.txt|Summary about technical and operational requirements
+12|Concept|early_draft_srs_galecia.txt|Proposal about requirements and management of library system
+13|E-mails|email_financial_reports.eml|Discussion about financial reports, payments, audit and archives
+14|E-mails|email_report_features.eml|Discussion about report functions
+15|E-mails|email_staff_login.eml|Discussion about employee registation
+16|Reference text|evergreen_reference_2009.txt|Referencial context of Evergreen system
+17|Conversation|interview_cataloging_2009-05-08.txt|Stakeholder input on categorization, fund management, transfers and reports
+18|Conversation|interview_sysadmin_2009-05-10.txt|Technical input about technical environment, performance, accessibility and permissions
+19|Technical group record|meeting_tech_subcommittee_2009-06-30.txt|Technical input about technical limitations and decisions
+20|Survey results|survey_results_2009.txt|Feedback summary on respondends needs

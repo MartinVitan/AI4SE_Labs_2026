@@ -1,0 +1,432 @@
+{
+  "missing_candidate_ids": [
+    "evergreen_reference_2009.txt::C31",
+    "evergreen_reference_2009.txt::C46",
+    "evergreen_reference_2009.txt::C47",
+    "evergreen_reference_2009.txt::C48",
+    "evergreen_reference_2009.txt::C49",
+    "evergreen_reference_2009.txt::C50",
+    "interview_sysadmin_2009-05-10.txt::C2",
+    "meeting_tech_subcommittee_2009-06-30.txt::C2",
+    "meeting_tech_subcommittee_2009-06-30.txt::C5",
+    "meeting_tech_subcommittee_2009-06-30.txt::C7",
+    "survey_results_2009.txt::C13",
+    "survey_results_2009.txt::C14",
+    "survey_results_2009.txt::C21"
+  ],
+  "missing_candidates": [
+    {
+      "candidate_text": "Systém má umožniť zrušiť spustenú správu.",
+      "evidence": "No ability to cancel a running report",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "evergreen_reference_2009.txt::C31",
+      "source_path": "evergreen_reference_2009.txt"
+    },
+    {
+      "candidate_text": "Systém má poskytovať podrobné oprávnenia pre správy.",
+      "evidence": "No fine-grained permissions for reports",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "evergreen_reference_2009.txt::C46",
+      "source_path": "evergreen_reference_2009.txt"
+    },
+    {
+      "candidate_text": "Systém má oddeľovať vývojové a školiace prostredie.",
+      "evidence": "No development/training environment separation",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "evergreen_reference_2009.txt::C47",
+      "source_path": "evergreen_reference_2009.txt"
+    },
+    {
+      "candidate_text": "Systém má umožňovať migráciu konfigurácie medzi prostrediami.",
+      "evidence": "No configuration migration between environments",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "evergreen_reference_2009.txt::C48",
+      "source_path": "evergreen_reference_2009.txt"
+    },
+    {
+      "candidate_text": "Rozhranie na vykazovanie má podporovať prístupnosť.",
+      "evidence": "No accessibility support for report interface",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "evergreen_reference_2009.txt::C49",
+      "source_path": "evergreen_reference_2009.txt"
+    },
+    {
+      "candidate_text": "Systém má integrovať online pomoc pre správy.",
+      "evidence": "No online help system integrated with reports",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "evergreen_reference_2009.txt::C50",
+      "source_path": "evergreen_reference_2009.txt"
+    },
+    {
+      "candidate_text": "Reporty musia byť spracúvané počas prevádzkových hodín bez narušenia ostatných funkcií systému.",
+      "evidence": "The key requirement is that searches and reports can be processed during open hours without disrupting other system functions.",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "interview_sysadmin_2009-05-10.txt::C2",
+      "source_path": "interview_sysadmin_2009-05-10.txt"
+    },
+    {
+      "candidate_text": "Pri reportovaní sa odporúča vyhnúť denormalizácii.",
+      "evidence": "I strongly recommend against denormalization for reporting",
+      "kind": "proposal",
+      "uncertainties": [],
+      "candidate_id": "meeting_tech_subcommittee_2009-06-30.txt::C2",
+      "source_path": "meeting_tech_subcommittee_2009-06-30.txt"
+    },
+    {
+      "candidate_text": "Školiace prostredie musí umožniť experimentovanie bez rizika pre produkčné dáta.",
+      "evidence": "the training environment needs to be safe - staff should be able to experiment without risking production data.",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "meeting_tech_subcommittee_2009-06-30.txt::C5",
+      "source_path": "meeting_tech_subcommittee_2009-06-30.txt"
+    },
+    {
+      "candidate_text": "Systém musí podporovať roly Global Admin s úplným prístupom, Local Admin s reportovaním a konfiguráciou na úrovni pobočky, Library Manager na spúšťanie schválených reportov a obmedzenú úpravu šablón a Staff na spúšťanie reportov v rámci pridelených oprávnení.",
+      "evidence": "Global Admin: Full system access\n- Local Admin: Branch-level reporting and configuration\n- Library Manager: Run approved reports, limited template modification\n- Staff: Run reports within assigned permissions",
+      "kind": "requirement",
+      "uncertainties": [],
+      "candidate_id": "meeting_tech_subcommittee_2009-06-30.txt::C7",
+      "source_path": "meeting_tech_subcommittee_2009-06-30.txt"
+    },
+    {
+      "candidate_text": "Používateľ môže ukladať dotazy a opakovane ich používať.",
+      "evidence": "Save and reuse queries",
+      "kind": "proposal",
+      "uncertainties": [],
+      "candidate_id": "survey_results_2009.txt::C13",
+      "source_path": "survey_results_2009.txt"
+    },
+    {
+      "candidate_text": "Rozhranie reportov môže poskytovať viacero výstupných formátov vrátane Excelu, CSV a HTML.",
+      "evidence": "Multiple output formats (Excel, CSV, HTML)",
+      "kind": "proposal",
+      "uncertainties": [],
+      "candidate_id": "survey_results_2009.txt::C14",
+      "source_path": "survey_results_2009.txt"
+    },
+    {
+      "candidate_text": "Výsledky reportov zahŕňajú aj hodnoty NULL a prázdne polia.",
+      "evidence": "All nulls and blank fields must be included in results",
+      "kind": "proposal",
+      "uncertainties": [],
+      "candidate_id": "survey_results_2009.txt::C21",
+      "source_path": "survey_results_2009.txt"
+    }
+  ],
+  "issues": [
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "N001",
+        "conversations/conv_pines014_material_volume.eml::C1"
+      ],
+      "explanation": "Zjednotená položka N001 obsahuje iba myšlienku reportu „v ľubovoľnom okamihu“, ale pôvodný C1 špecifikuje konkrétny kontext „Dalton-Whitman“ v dôkazovej vete. Pri zjednotení sa konkrétny detail z dôkazu stratil (nie je jasné, či má byť report viazaný na konkrétnu knižnicu alebo všeobecne na ľubovoľnú).",
+      "suggested_action": "Preveriť, či v zjednotenom požiadavkovom texte má zostať explicitný údaj o tom, že report je viazaný na konkrétnu knižnicu/umiestnenie (napr. Dalton-Whitman), alebo je to len príklad z evidence."
+    },
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "N002",
+        "conversations/conv_pines014_material_volume.eml::C2"
+      ],
+      "explanation": "N002 opisuje „celkový počet položiek a rozdelenie podľa kategórií“, ale v pôvodnom C2 nie je špecifikované, či kategórie sú tie isté ako v C10 (formát/beletria-nebeletria) alebo či kategórie budú definované inde. Keďže N002 je samostatne zjednotená a N010 tiež, nie je jasné, či ide o rovnaké kategorizácie alebo len všeobecnú „kategórie“ bez väzby na konkrétny zoznam.",
+      "suggested_action": "Overiť, či „kategórie“ v N002 majú významovo zodpovedať „kategóriám“ v N010 (t. j. rovnakým dimenziám: fiction/non-fiction, formát), alebo či N002 má byť neutrálne a N010 má riešiť len konkrétny príklad."
+    },
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "N003",
+        "conversations/conv_pines014_material_volume.eml::C3",
+        "N004",
+        "conversations/conv_pines014_material_volume.eml::C4"
+      ],
+      "explanation": "N003 sa pýta, či vypožičané položky sa započítavajú do celkového počtu. N004 potom definuje tri komponenty (nové prírastky, na polici, v obehu) a ich súčet, čo implicitne naznačuje, že položky „v obehu“ (vypožičané) do súčtu patria. Po zjednotení teda môže vzniknúť napätie/ambiguita: N003 je otázka, zatiaľ čo N004 pôsobí ako rozhodnutie o zahrnutí „v obehu“ do súčtu.",
+      "suggested_action": "Preveriť, či N003 má zostať ako otvorená otázka (t. j. neodvodzovať odpoveď z N004), alebo či N004 už predstavuje vyjasnené pravidlo pre definíciu celkového počtu."
+    },
+    "possible_conflict",
+    "affected_ids",
+    "uncertainty",
+    "affected_ids':['conversations/conv_pines018_item_transfer.eml::C7','conversations/conv_pines018_item_transfer.eml::C8','interview_cataloging_2009-05-08.txt::C10','conversations/conv_pines018_item_transfer.eml::C8'], ",
+    ",",
+    "lost_detail",
+    "affected_ids:conversations/conv_pines019_020_missing_intransit.eml::C4",
+    "explanation: Pôvodný kandidát C4 explicitne obsahuje neistotu o predvolenom nastavení („probably 7 days default“). V zjednotení „N057“ je už len všeobecné „nastaviteľný počet dní“ bez toho, že default 7 dní je iba návrh/odhad.",
+    "suggested_action: Preveriť, či sa v rámci zjednotenia nemala zachovať informácia „7 dní je pravdepodobný default, nie potvrdené“.",
+    "uncertainty",
+    "affected_ids: []",
+    "explanation: ",
+    "bad_merge",
+    "uncertain_id: N071",
+    "Zjednotená položka N071 („Auditná stopa vymazaní a vyradení podľa lokality a systému“) mieša významy „vyradení“ a „vymazaní“. V podkladových kandidátoch sa auditná stopa vzťahuje na „purged deletions“/„deletions“; explicitný pojem „vyradenia“ sa v kombinovaných pôvodných položkách nevyskytuje ako samostatný typ udalosti, preto môže zjednotenie zmeniť význam na širší/inej domény.",
+    "Skontrolovať, či systém má auditovať aj „vyradenia“ (purging/purged/exemplárové vyradenia) alebo iba „vymazania“ (deletions). Ak ide len o vymazania, upraviť formuláciu zjednotenej položky; ak sa má auditovať oboje, treba doložiť pôvodnými kandidátmi explicitný spoločný význam.",
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "conversations/conv_pines022_deletions.eml::C11",
+        "conversations/conv_pines022_deletions.eml::C12"
+      ],
+      "explanation": "Zjednotená položka spája dva kandidáty, ale význam zostáva odlišný: jeden je formulovaný ako otázka („Can we also...?“), druhý ako návrh („would be helpful“). Nie je jasné, či má výsledný výstup riešiť potrebu ako akceptované rozhodnutie/požiadavku, alebo len uvádzať otázku do úvah.",
+      "suggested_action": "Overiť, či pri zjednotení má výsledná položka byť braná ako požiadavka, návrh alebo len otvorená otázka (a či sa má zmeniť/nezmeniť formulácia z typu „open question“ na „proposal“)."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "conversations/conv_pines023_patron_characteristics.eml::C7",
+        "early_draft_srs_galecia.txt::C73",
+        "evergreen_reference_2009.txt::C57",
+        "meeting_tech_subcommittee_2009-06-30.txt::C20"
+      ],
+      "explanation": "Zjednotená položka (N089) agreguje požiadavku na zahrnutie NULL a prázdnych polí, ale pôvodné formulácie nie sú úplne identické: C7 explicitne spája zahrnutie s vysvetlením „nevyraďovať potichu“ a „zahrnúť do reportu“; ostatné verzie sú kratšie a môžu byť interpretované ako všeobecné pravidlo bez tejto podmienky/zdôvodnenia. Pri zjednotení sa tak mohol stratiť význam viazaný na reporty a dôvod (zamedziť zavádzajúcim výsledkom).",
+      "suggested_action": "Preveriť, či výsledná zjednotená formulácia má obsahovať aj kontext/zdôvodnenie z C7 (reporty a dôsledok „neexkludovať potichu“), alebo či sa má ponechať len všeobecné „include nulls/blank fields“."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "conversations/conv_pines023_patron_characteristics.eml::C9",
+        "conversations/conv_pines023_patron_characteristics.eml::C10"
+      ],
+      "explanation": "Zjednotená položka spája otázku „spúšťať reporty… zoskupené podľa charakteristík“ (C9) so samostatnou otázkou na „GROUP BY“ konkrétnych polí (C10). Pri zjednotení nie je jasné, či obe otázky míria na rovnaký predmet (uvoľnenie/implementáciu zoskupovania reportov vs. len možnosť GROUP BY konkrétnych polí).",
+      "suggested_action": "Overiť, či C9 a C10 majú identický význam a či formulácia v zjednotení neprekrýva rozdiel medzi „reporty zoskupené podľa charakteristík“ a „GROUP BY týchto polí“."
+    },
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "conversations/conv_pines024_inactive_patrons.eml::C1",
+        "early_draft_srs_galecia.txt::C43"
+      ],
+      "explanation": "Zjednotená položka N094 spája požiadavku z C1 a návrh z early_draft. Pri zjednotení je rozdiel v úrovni presnosti formulácie: C1 neuvádza explicitne „konfigurovateľné úrovne“ (System/Home Library/County), zatiaľ čo early_draft ju explicitne pridáva. Nie je možné potvrdiť, či C1 implicitne zahŕňa aj tieto úrovne, alebo ide o rozšírenie z early draftu.",
+      "suggested_action": "Preveriť v zdroji C1, či sa okrem „X configurable“ uvádzajú aj úrovne (System/Home Library/County), prípadne či sa tieto úrovne majú priradiť len k early_draft-u."
+    },
+    "uncertainty",
+    "affected_ids",
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "early_draft_srs_galecia.txt::C10",
+        "meeting_minutes/meeting_2009-07-20_minutes.txt::C25",
+        "interview_sysadmin_2009-05-10.txt::C15",
+        "meeting_tech_subcommittee_2009-06-30.txt::C8"
+      ],
+      "explanation": "Zjednotená položka N116 používa pôvodné tvrdenie „požiadavky nesmú obmedzovať funkčnosť/vlastnosti OPAC“ (CO-5) a zlučuje aj rozhovorové formulácie, ktoré hovoria o samostatnej časti systému (reportovací systém) a jeho vplyve na OPAC pri spúšťaní reportov. Texty sa zhodujú len čiastočne: CO-5 je o tom, že „požiadavky“ nesmú obmedziť OPAC (širšie/legislatívne vo formulácii požiadavky), kým rozhovor zdôrazňuje výkonové obmedzenie OPAC pri behu reportov (konkrétne scenáre a výkon).",
+      "suggested_action": "Preveriť, či zjednotená požiadavka nemá zodpovedať dvom rôznym požiadavkám (1) zákaz obmedzovania funkcionality OPAC požiadavkami a (2) výkonová neovplyvniteľnosť OPAC pri spúšťaní reportov). Ak áno, rozdeliť alebo spresniť, ktorú verziu reprezentuje.“"
+    },
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "interview_sysadmin_2009-05-10.txt::C8",
+        "meeting_tech_subcommittee_2009-06-30.txt::C1",
+        "early_draft_srs_galecia.txt::C6",
+        "meeting_minutes/meeting_2009-07-20_minutes.txt::C20"
+      ],
+      "explanation": "Zjednotená položka N112 spája „plne relačný databázový backend“ (CO-1) s formuláciou o „reportovacom systéme“ pracujúcom s relačnou štruktúrou databázy („not fight against it“). Tvrdenia môžu byť významovo príbuzné, ale nie je isté, či druhý výrok pridáva iba špecifické obmedzenie pre reportovanie, alebo ide o rovnakú systémovú požiadavku na celý backend. Pri zjednotení sa môže stratiť rozsah: či je „fully relational backend“ vlastnosť celého systému, alebo iba toho reportovacieho/alebo management reporting subsystému.",
+      "suggested_action": "Preveriť rozsah požiadavky: či „plne relačný backend“ sa má vzťahovať na celý systém alebo len na reportovanie/management processes. Ak sú rozsahy odlišné, zjednotenú položku rozdeliť alebo doplniť obmedzenie na správny komponent."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "interview_sysadmin_2009-05-10.txt::C7",
+        "meeting_tech_subcommittee_2009-06-30.txt::C3",
+        "early_draft_srs_galecia.txt::C7",
+        "meeting_minutes/meeting_2009-07-20_minutes.txt::C21"
+      ],
+      "explanation": "Zjednotená položka N113 spája všeobecnú požiadavku „standards-compliant HTML“ s výraznejším detailom z rozhovoru: „properly structured with alt tags, ARIA labels, and semantic HTML“ (explicitne prístupnostné prvky). V iných pôvodných textoch je len „standards-compliant / W3C“, bez explicitných ARIA/alt. Zjednotením sa môže zmeniť alebo rozšíriť význam smerom k prístupnosti, ktorá nie je v každom pôvodnom tvrdení rovnako priamo uvedená.",
+      "suggested_action": "Preveriť, či požiadavka má byť striktne „validné/štandardné HTML“ (W3C/HTML štandardy) alebo aj explicitne „prístupné HTML“ s alt/ARIA. Ak nie je zámer pridať explicitné ARIA/alt, rozdeliť na dve požiadavky alebo obmedziť formuláciu N113 na štandardnosť HTML."
+    },
+    "bad_merge",
+    "affected_ids",
+    "possible_conflict",
+    "affected_ids",
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "early_draft_srs_galecia.txt::C52",
+        "email_financial_reports.eml::C6"
+      ],
+      "explanation": "Zjednotená položka N154 zhodnocuje, že „finančné údaje sa priraďujú k záznamom čitateľov a položiek“. Pôvodný kandidát C52 však obsahuje aj ďalšie špecifické požiadavky (sledovanie odpustených pokút a platieb podľa knižnice, jednoduchá aktualizácia finančných údajov a vyhľadávanie účtov so zostatkom nad stanovenou sumou), ktoré v zjednotení nie sú zachytené. Ide teda o možnú stratu detailu pri zjednotení.",
+      "suggested_action": "Overiť, či sa detail „sledovanie odpustených pokút/platieb podľa knižnice“ a „vyhľadávanie podľa zostatku nad X“ rieši inde (napr. v N155 alebo iných zjednotených položkách). Ak nie, doplniť ho do relevantnej zjednotenej požiadavky."
+    },
+    {
+      "issue_type": "lost_detail",
+      "affected_ids": [
+        "early_draft_srs_galecia.txt::C52"
+      ],
+      "explanation": "Kandidát C52 obsahuje aj explicitnú požiadavku „umožňovať jednoduchú aktualizáciu finančných údajov“. V zjednotenej položke N154 je ponechané iba priradenie finančných údajov k záznamom, bez zmienky o „jednoduchej aktualizácii“ alebo spracovaní vyhľadávania/odpustení nad rámec priradenia.",
+      "suggested_action": "Overiť, či „jednoduchá aktualizácia finančných údajov“ bola zahrnutá do inej zjednotenej položky; ak nie, preformulovať alebo doplniť do zodpovedajúcej zjednotenej požiadavky."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "early_draft_srs_galecia.txt::C55",
+        "evergreen_reference_2009.txt::C51"
+      ],
+      "explanation": "Zjednotená položka N157 spája dva texty, ktoré sú významovo podobné na úrovni „tri rozhrania/reporting“, ale podklad evergreen_reference_2009.txt::C51 uvádza navyše konkrétne tvrdenie „iba basic canned existuje“. Toto obmedzenie/kontext nie je v zjednotenej položke zachytené a môže meniť význam pôvodného záznamu (aspoň ako status/obmedzenie existujúcej funkčnosti).",
+      "suggested_action": "Overiť, či veta „only basic canned exists“ má byť ponechaná ako obmedzenie/poznámka v rovnakej požiadavke alebo bola omylom zjednotená. Ak ide o stav (nie požiadavku), oddeliť ju od požiadavky na 3 rozhrania."
+    },
+    {
+      "issue_type": "possible_conflict",
+      "affected_ids": [
+        "early_draft_srs_galecia.txt::C68",
+        "evergreen_reference_2009.txt::C38"
+      ],
+      "explanation": "Zjednotená položka N170 kombinuje návrh, že systém umožní nahrať textový súbor na filtrovanie reportov (C68), s protichodným vstupom z typu requirement, podľa ktorého takáto možnosť nie je k dispozícii (C38: „No ability to upload text files for filtering“).",
+      "suggested_action": "Overiť, či C38 má byť interpretované ako neexistujúca funkcia v inom kontexte/verzii alebo či ide o rozpor medzi dokumentmi. Ak ide o skutočný rozpor, zjednotenie N170 treba oddeliť alebo upraviť tak, aby reflektovalo oba významy."
+    },
+    "uncertainty",
+    "affected_ids",
+    "explanation",
+    "suggested_action",
+    "bad_merge",
+    "affected_ids: [\"email_report_features.eml::C3\",\"survey_results_2009.txt::C9\"]",
+    "explanation: \"Zjednotená položka N201 spája dve formulácie o šablónach reportov spustiteľných alebo upraviteľných. Texty sú obsahovo veľmi podobné, ale pôvodné kandidáty majú rozdielny rámec: v e-maili je zmienka o tom, že šablóny sú dostupné zamestnancom (follow-up kontext), kým survey to neuvádza. Pri zjednotení tak môže dôjsť k strate/nezachyteniu detailu o dostupnosti pre zamestnancov.\"",
+    "suggested_action: \"Overiť, či zjednotené znenie N201 má zachytený aj detail dostupnosti šablón zamestnancom; ak nie, doplniť ho priamo do zjednotenej formulácie alebo potvrdiť, že je mimo rozsah.\"",
+    "uncertainty",
+    "affected_ids: [\"email_report_features.eml::C4\"]",
+    "explanation: \"Zjednotená položka N202 preberá požiadavku, že úpravy filtrov a polí nesmú ohroziť správnosť výsledkov. V pôvodnom kandidáte je však neistota v tom, ako presne môžu úpravy ohroziť výsledky (nejasná/neurčená podmienka). Táto neistota ostáva a zjednotením sa nevyjasňuje.\"",
+    "suggested_action: \"Preveriť pôvodný zdroj alebo doplniť špecifikáciu kritérií, kedy sú úpravy filtrov/polí stále bezpečné (napr. ktoré typy zmien môžu byť povolené).\"",
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "email_report_features.eml::C13",
+        "meeting_minutes/meeting_2009-07-20_minutes.txt::C3",
+        "evergreen_reference_2009.txt::C29",
+        "survey_results_2009.txt::C12"
+      ],
+      "explanation": "Zjednotená položka N211 obsahuje viacero aspektov z pôvodnej požiadavky email_report_features.eml::C13 (napr. „koľko reportov je pred ním“, „kedy bol report odoslaný“, explicitné stavy čakajúci/spustený/dokončený/zlyhaný). Avšak iné pôvodné zdroje v merge (najmä meeting_minutes...::C3, evergreen_reference...::C29, survey_results...::C12) podporujú iba všeobecnú viditeľnosť v rade („kde sa nachádza“, resp. „report queue visibility“) bez týchto detailov. Tým pádom merge môže zaviesť/zdôrazniť detaily, ktoré nie sú podložené všetkými vstupnými kandidátmi.",
+      "suggested_action": "Overiť, či N211 má byť formulované len na úrovni spoločného menovateľa (viditeľnosť pozície/stavu v rade), alebo či sa detaily (počet pred ním, timestamp odoslania, konkrétne stavy) majú viazať len na subset podporených kandidátmi (napr. ponechať ich ako samostatné požiadavky alebo ich explicitne označiť ako neúplne pokryté)."
+    },
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "email_report_features.eml::C13",
+        "meeting_minutes/meeting_2009-07-20_minutes.txt::C3",
+        "evergreen_reference_2009.txt::C29",
+        "survey_results_2009.txt::C12"
+      ],
+      "explanation": "Formulácia N211 („Zobrazenie stavu a pozície reportu vo fronte.“) je relatívne konkrétna, ale dôkazy nie sú konzistentné v miere konkrétnosti: niektoré kandidáty hovoria o „stave“ a „pozícii“, iné len o „kde sa report nachádza“ alebo „viditeľnosť v rade“. Z dôvodu rozdielnej špecifikácie nie je možné potvrdiť, že „pozícia“ je vždy ekvivalentná „koľko reportov je pred ním“ ani že „stav“ zahŕňa presne tie isté stavy ako v email_report_features.eml::C13.",
+      "suggested_action": "Preveriť, či „pozícia“ v N211 má byť interpretovaná ako (a) poradové číslo/počet pred ním alebo iba (b) identifikácia relatívnej pozície („v rade“/„kde sa nachádza“). Rovnako overiť, ktoré konkrétne stavy sú skutočne požadované v zdrojoch zahrnutých do N211."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "evergreen_reference_2009.txt::C7",
+        "evergreen_reference_2009.txt::C6"
+      ],
+      "explanation": "V zjednotených položkách je „Počet upravených exemplárov“ (C6) a „Exempláre podľa dôvodu zastavenia pokút“ (C7) samostatne, takže tu nevidno problém. Avšak pri kontrole obsahu z pôvodných kandidátov sa ukazuje, že C7 je explicitne „zoznam exemplárov“ (list), zatiaľ čo zjednotenie C7 ho skracuje na „Exempláre podľa dôvodu zastavenia pokút“ bez spresnenia, že ide o zoznam, nie iba počet. Toto môže znamenať zmenu významu (list vs. count).",
+      "suggested_action": "Overiť, či N229 má zostať explicitne „zoznam exemplárov“ (nie iba agregovaný prehľad/počet) a či sa pri zjednotení nezmenil druh výstupu."
+    },
+    {
+      "issue_type": "ambiguity",
+      "affected_ids": [
+        "evergreen_reference_2009.txt::C8"
+      ],
+      "explanation": "Pôvodný kandidát C8 obsahuje detail „po termíne o viac než určený počet dní“ a „vrátane kontaktných údajov čitateľa“. Zjednotená položka N230 ponecháva len „Exempláre po termíne vrátane kontaktných údajov čitateľa“ a vynecháva explicitný parameter „o viac než určený počet dní“. To môže spôsobiť nejasnosť, či ide o ľubovoľnú dobu po termíne, alebo o prah (XX dní).",
+      "suggested_action": "Preveriť a doplniť späť/udržať parameter prahovania (XX dní) do znenia N230, ak je požiadavka na „viac než určený počet dní“."
+    },
+    {
+      "issue_type": "possible_conflict",
+      "affected_ids": [
+        "evergreen_reference_2009.txt::C26",
+        "evergreen_reference_2009.txt::C27"
+      ],
+      "explanation": "Zjednotené položky pokrývajú dve samostatné kategórie rezervácií: „nevybavené“ a „zastarané“. Vstup dáva jasné pomenovania, ale neposkytuje pravidlo, či sú tieto kategórie navzájom vylučujúce (jedna rezervácia môže patriť do oboch), alebo ako sa presne definujú časové/obchodné hranice „zastaranej“ vs. „nevybavenej“. Pri implementácii môže vzniknúť rozpor v očakávanom obsahu zoznamov.",
+      "suggested_action": "Overiť v podkladových definíciách/špecifikácii, či „stale“ (zastarané) je podmnožina „unfilled“ (nevybavených) alebo ide o odlišné, vylučujúce sa stavy; stanoviť presné kritériá z pohľadu času/stavu rezervácie."
+    },
+    {
+      "issue_type": "ambiguity",
+      "affected_ids": [
+        "evergreen_reference_2009.txt::C28"
+      ],
+      "explanation": "Položka „Rozšírená správa o starom dlhu“ je v pôvodných dátach označená ako „partially available, needs enhancement“. Zjednotenie to nezmenilo, ale ponecháva nejasné, aký rozsah má „rozšírená“ správa zahŕňať (aké prídavné údaje oproti pôvodnej správe), keďže vstup neposkytuje konkrétny zoznam detailov ani hranice „starého dlhu“.",
+      "suggested_action": "Preveriť, aké konkrétne doplnenia/rozšírenia sa očakávajú oproti existujúcej „aged debt“ správe a čo presne znamená „starý dlh“ (definičné kritériá/časové okno) v danom kontexte."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "N251"
+      ],
+      "explanation": "Zjednotená položka N251 spája viacero požiadaviek z pôvodných kandidátov, ale neobsahuje všetky pôvodné kandidáty z obdobia plánovania/šablón: chýba candidate evergreen_reference_2009.txt::C36 (doručovanie správ e-mailom) a evergreen_reference_2009.txt::C37 (adresár na doručovanie správ), ktoré sú v pôvodných dátach samostatne uvedené. Navyše v merged texte sa objavujú aj časti, ktoré sa síce v evidence vzťahujú len k niektorým pôvodným kandidátom (napr. e-mail a šablóny), ale nie sú pokryté všetkými dotknutými candidate_ids v zozname pod týmto zjednotením.",
+      "suggested_action": "Skontrolovať zjednotenie N251: overiť, či candidate_ids má obsahovať aj evergreen_reference_2009.txt::C36 a evergreen_reference_2009.txt::C37, prípadne upraviť merged text tak, aby zodpovedal presne evidovaným a zahrnutým pôvodným kandidátom."
+    },
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "N251"
+      ],
+      "explanation": "V zjednotenej položke N251 je v candidate_text uvedené „plánovanie“, no medzi zahrnutými candidate_ids je iba evergreen_reference_2009.txt::C35 (plánovanie periodicitou). Nie je jasné, či „plánovanie“ v texte N251 má byť chápané výhradne ako voľba ASAP/Hourly/… (C35), alebo či má zahrňovať aj iné aspekty plánovania, ktoré však v zjednotení nie sú pokryté inými candidate_ids. Keďže pre ostatné zložky sa nepoužili žiadne ďalšie plánovacie kandidáty, význam sa môže pri zjednotení rozšíriť alebo byť nepresný.",
+      "suggested_action": "Overiť význam slova „plánovanie“ v N251 a či zodpovedá striktne požiadavke evergreen_reference_2009.txt::C35 (ASAP/Hourly/Daily/Weekly/Monthly/Yearly), alebo či má byť text špecifikovanejší podľa C35."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "interview_cataloging_2009-05-08.txt::C20"
+      ],
+      "explanation": "V zjednotenej položke N274 je formulácia „Výkaz priestoru na regáloch podľa žánru a formátu“, pričom pôvodný kandidát C20 hovorí, že pre každý žáner a formát sa majú porovnať tri percentá: percento celkového obehu, percento zbierky a percento celkového priestoru na regáloch. Zjednotením sa zdá, že dôraz/obsah na porovnaní týchto troch percent sa skrátil na iba „priestor na regáloch“.",
+      "suggested_action": "Overiť, či zjednotená položka N274 má zachytený celý obsah pôvodného C20 (porovnanie % obehu, % zbierky a % priestoru) alebo či sa pri zjednotení skutočne stratila požiadavka na zvyšné dve percentuálne metriky."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "interview_cataloging_2009-05-08.txt::C21"
+      ],
+      "explanation": "V zjednotenej položke N275 je „Výkaz objemu materiálu podľa akvizícií, políc, obehu a kategórií“, ale pôvodný kandidát C21 obsahuje aj explicitné položky kategorizácie (napr. „total items, holds, adult fiction, board books, etc.“). Zjednotená formulácia nie je nutne nepravdivá, no nepôsobí rovnako konkrétne; mohla sa stratiť požiadavka na rozdelenie na typy/špecifické kategórie príkladom (aj keď nie je jasné, že táto konkrétnosť bola požiadavkou vs. iba príklad).",
+      "suggested_action": "Overiť, či N275 zachytáva aj požiadavku na detailné kategórie/segmenty (napr. holds, adult fiction, board books), alebo či ide len o všeobecnú agregáciu podľa kategórií."
+    },
+    {
+      "issue_type": "ambiguity",
+      "affected_ids": [
+        "interview_cataloging_2009-05-10.txt::C3"
+      ],
+      "explanation": "Zjednotená položka N278 je „Radenie reportov do frontu a spracovanie na pozadí alebo replike“. Pôvodný kandidát C3 obsahuje dvojvetnú alternatívu: buď front/backgroud spracovanie, alebo read-only reporting replika. Zjednotená formulácia mieša oba prístupy do jednej vety bez jasného „buď ... alebo“; význam zostáva pravdepodobný, ale z formálnej stránky je menej jednoznačné, či sa požaduje oboje, alebo alternatíva.",
+      "suggested_action": "Preveriť, či N278 má vyjadrenú alternatívu (jedno z možností) v súlade s pôvodným C3, alebo či sa pri zjednotení zmenil význam na „obidve“ možnosti."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "meeting_minutes/meeting_2009-03-15_minutes.txt::C12",
+        "meeting_minutes/meeting_2009-03-15_minutes.txt::C13"
+      ],
+      "explanation": "Zjednotené položky zachytávajú rovnakú tému (špecifikácia UI), ale ide o odlišné obsahové roviny: C12 hovorí o tom, že sa zatiaľ treba sústrediť na funkčné požiadavky (nie detailné UI), zatiaľ čo C13 hovorí o ďalšej špecifikácii UI a dátových štruktúr iteratívne prototypovaním. V dátach síce obe sú „proposal“ a týkajú sa UI, no zjednotenie by malo zachovať aj rozdiel medzi „zatiaľ sa nesústrediť na detailné UI“ a „iteratívne prototypovať UI aj dátové štruktúry“. Keďže spojené nie sú, nejde o priamo identifikovaný spor, ale je to potenciálne problematické zjednotenie kvôli rozdielnemu významovému zameraniu obsahu.",
+      "suggested_action": "Preveriť, či zjednotenie v tomto prípade neodstraňuje/nezlučuje túto významovú hranicu (časové obmedzenie „zatím“ vs. spôsob „ďalšia špecifikácia iteratívne“). Ak existuje skutočné zjednotenie týchto dvoch odlišných návrhov do jednej položky, overiť, že výsledný text zachová oba významy."
+    },
+    {
+      "issue_type": "lost_detail",
+      "affected_ids": [
+        "meeting_minutes/meeting_2009-03-15_minutes.txt::C14"
+      ],
+      "explanation": "Pôvodný záznam C14 má neistotu, že otázka je zaznamenaná, ale neuvádza jej konkrétne znenie ani odpoveď. V zjednotenej položke je text „Ako bude špecifikované používateľské rozhranie?“, pričom z pôvodných dát je zrejmé, že ide len o otázku bez potvrdeného presného znenia/odpovede. Samotné zjednotené znenie tak môže byť doplnením alebo špecifikovaním bez podkladovej istoty, a tým sa mohol stratiť detail o neistote (že skutočné znenie nebolo uvedené).",
+      "suggested_action": "Overiť v zdrojovom texte, či je formulácia otázky v C14 skutočne presne táto a či existuje odpoveď. Ak nie, upraviť zjednotenú položku tak, aby reflektovala pôvodnú neistotu (napr. „otázka na špecifikáciu UI bola položená“, bez tvrdenia presného znenia)."
+    },
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "meeting_minutes/meeting_2009-03-15_minutes.txt::C15"
+      ],
+      "explanation": "Položka C15 v pôvodných dátach uvádza, že čitatelia môžu používať Reports nepriamo prostredníctvom obrazoviek alebo displejov v knižniciach, pričom v zázname je aj zmienka o OPAC. V zjednotených dátach je ponechané „prostredníctvom displejov“, ale je otázne, či zostal aj význam „OPAC“ a „displays/screens“ v rovnakej šírke (môže dôjsť k zúženiu formulácie). Keďže nejde o jasný konflikt, ale len možné skreslenie rozsahu detailu, označujem to ako uncertain.",
+      "suggested_action": "Skontrolovať, či zjednotená formulácia zachováva všetky prvky pôvodného významu (OPAC ako sprostredkovanie a obrazovky/displeje v knižniciach). Ak nie, doplniť chýbajúci prvok podľa zdrojovej vety."
+    },
+    {
+      "issue_type": "uncertainty",
+      "affected_ids": [
+        "meeting_tech_subcommittee_2009-06-30.txt::C18"
+      ],
+      "explanation": "Zjednotená položka N319 („Reportovací dátový sklad pre historické údaje.“) odkazuje na pôvodného kandidáta C18, ktorého evidence aj v pôvodných dátach uvádzajú neistotu („We probably need...“). Zjednotenie tu neodlišuje, že ide o pravdepodobný/uvažovaný návrh bez potvrdenej požiadavky.",
+      "suggested_action": "Overiť v zdrojovom dokumente, či sa z C18 stal potvrdený návrh/požiadavka, alebo zostáva len „probably/considered“."
+    },
+    {
+      "issue_type": "bad_merge",
+      "affected_ids": [
+        "meeting_minutes/meeting_2009-07-20_minutes.txt::C13",
+        "meeting_minutes/meeting_2009-07-20_minutes.txt::C14"
+      ],
+      "explanation": "Zjednotená položka N312 spája dve formulácie, ktoré sa týkajú výkonu v otváracích hodinách a oddelenia spracovania na pozadí/queuing. Nie je jasné, či ide o jednu spoločnú požiadavku (jedno riešenie) alebo o dve samostatné požiadavky s iným zámerom (časové obmedzenie vs. mechanizmus). Text z N312 je skrátený tak, že môže maskovať rozdiel medzi „bez narušenia ostatných funkcií počas otváracích hodín“ a „prevent report generation from slowing down...“ (konkrétne spomalenie klienta).",
+      "suggested_action": "Overiť, či C13 a C14 majú byť považované za jeden ucelený bod alebo za dva samostatné body; v prípade rozdielu ich oddeliť (alebo spresniť, čo presne je cieľom požiadavky z každého zdroja)."
+    }
+  ]
+}
