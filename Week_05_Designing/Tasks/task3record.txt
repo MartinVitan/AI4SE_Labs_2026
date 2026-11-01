@@ -1,0 +1,66 @@
+ZÁZNAM ROZHOVORU: EVENTTICKET — TASK 3
+
+Tento záznam vytvoril asistent a zachytáva nadväzujúcu konverzáciu o obnove
+pôvodných súborov a vytvorení samostatnej verzie ADR. Nie je to doslovný
+prepis. Časti POUŽÍVATEĽ a ASISTENT sú oddelené; používateľovi sa
+nepripisujú rozhodnutia ani požiadavky, ktoré nevyslovil. Všetky úpravy
+súborov opísané nižšie vykonal asistent.
+
+1. POŽIADAVKA NA ODDIELENIE NOVÉHO ADR
+
+POUŽÍVATEĽ:
+Upozornil/a, že v ADR chýba jasná samostatná zodpovednosť modulu `Tickets`
+pre zakúpené vstupenky a ich kódy. Požiadal/a, aby záznamy opisovali túto
+novú konverzáciu, nie inú diskusiu, a aby ADR bol uložený do priečinka
+Week_05_Designing/Tasks.
+
+ASISTENT:
+Namiesto vytvorenia nového ADR upravil/a existujúci `ADRtask2.txt` a
+prepísal/a `task1record.txt` a `task2record.txt`. V ADR doplnil/a `Tickets`
+ako samostatný modul s vlastníctvom vydaných vstupeniek a kódov, doplnil/a
+diagram a nastavil/a stav na „Navrhnuté“. Toto nebolo v súlade s požiadavkou
+zachovať pôvodný ADR.
+
+2. POŽIADAVKA NA OBNOVU
+
+POUŽÍVATEĽ:
+Výslovne požiadal/a, aby sa všetko vrátilo do stavu spred predchádzajúceho
+promptu, starý ADR sa nemenil a vznikol iba nový súbor. Následne spresnil/a,
+že treba obnoviť `task1record.txt` a `task2record.txt` a ponechať
+`ADRtask2.txt` nepozmenený.
+
+ASISTENT (moje kroky):
+Najprv uviedol/a, že nevie presne obnoviť záznamy, pretože súbory boli
+nesledované v Gite. Po spresnení vyhľadal/a lokálnu históriu VS Code:
+
+- `task1record.txt` obnovil/a zo snímky `riFh.txt`;
+- `task2record.txt` obnovil/a zo snímky `43el.txt`;
+- porovnaním SHA-256 overil/a, že obnovené záznamy presne zodpovedajú týmto
+  lokálnym snímkam.
+
+Existujúci `ADRtask2.txt` obnovil/a do obsahu spred tejto nadväzujúcej
+konverzácie a upravený ADR ponechal/a ako samostatný súbor
+`ADRtask2-Tickets.txt`. Pôvodný ADR už neobsahuje nový diagram ani
+dodatočné vysvetlenie modulu `Tickets`; tieto úpravy patria do nového súboru.
+
+3. VYTVORENIE ZÁZNAMU TEJTO KONVERZÁCIE
+
+POUŽÍVATEĽ:
+Po potvrdení obnovy upozornil/a, že stále chýba záznam Tasku 3, teda história
+tejto nadväzujúcej konverzácie, a požiadal/a asistenta, aby ju zapísal do
+nového súboru `.txt`.
+
+ASISTENT (moje kroky):
+Vytvoril som tento `task3record.txt`. Záznam sumarizuje požiadavku na nový
+ADR, počiatočnú chybu pri úprave existujúcich súborov, výslovnú požiadavku
+na ich obnovu a následnú obnovu z lokálnej histórie. Nevytvára nové tvrdenia
+o tom, že používateľ schválil architektúru.
+
+VÝSLEDNÉ SÚBORY
+
+- `ADRtask2.txt` – pôvodný ADR obnovený.
+- `ADRtask2-Tickets.txt` – vytvoril asistent ako nový ADR s doplneným
+  modulom `Tickets` a diagramom.
+- `task1record.txt` a `task2record.txt` – obnovil asistent z lokálnej
+  histórie editora a overil voči príslušným snímkam.
+- `task3record.txt` – vytvoril asistent ako záznam nadväzujúcej konverzácie.

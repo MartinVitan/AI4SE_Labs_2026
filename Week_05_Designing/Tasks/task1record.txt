@@ -1,0 +1,340 @@
+POZNÁMKY Z DISKUSIE O ARCHITEKTÚRE EVENTTICKETU
+
+Poznámka k záznamu
+------------------
+Ide o chronologické poznámky, nie o doslovný prepis. Časti „POUŽÍVATEĽ“ zachytávajú tvoje skutočné otázky a zhrnutia. Časti „ASISTENT“ zachytávajú vysvetlenia a odpovede. Tvoje vlastné pochopenie je uvedené iba tam, kde si ho sám/sama vyjadril/a.
+
+
+1. POŽIADAVKY NA EVENTTICKET A TRI ARCHITEKTÚRY
+------------------------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si o prečítanie požiadaviek a návrh troch architektúr. Opísal/a si EventTicket ako webovú aplikáciu na objavovanie a správu podujatí a distribúciu vstupeniek.
+
+Dodanými používateľskými príbehmi boli pokryté:
+- verejné prehliadanie aplikácie a podujatí;
+- registrácia, prihlásenie a odhlásenie;
+- používateľské, manažérske a administrátorské roly;
+- osobné stránky používateľov, manažérov a administrátorov;
+- obľúbené kategórie a e-mailové upozornenia;
+- prehľad rezervovaných predpredajov a zakúpených vstupeniek;
+- rezervácia predpredaja a nákup vstupeniek;
+- online platba a získanie vstupenkového kódu;
+- správa podujatí manažérom;
+- pridávanie manažérov administrátorom;
+- obnova zabudnutého hesla.
+
+ASISTENT:
+Navrhol tri alternatívy:
+1. Vrstvený monolit – jedna aplikácia rozdelená podľa technických vrstiev.
+2. Modulárny monolit – jedna aplikácia rozdelená na funkčné moduly s jasnými hranicami.
+3. Mikroslužby – samostatne nasadzované služby s vlastnými dátami a komunikáciou cez sieť.
+
+Ako východiskový kompromis odporučil modulárny monolit. Zmienil serverové overovanie oprávnení, rezervácie a objednávky, spracovanie platieb, e-mailové upozornenia a obnovu hesla.
+
+
+2. PRECHOD POŽIADAVKY CEZ VRSTVENÝ MONOLIT
+--------------------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si, aby sme sa najskôr venovali prvej architektúre – vrstvenému monolitu – a krok za krokom opísali priechod požiadavky cez vrstvy. Ako príklad si uviedol/la prezeranie zoznamu podujatí.
+
+ASISTENT:
+Opísal tento tok:
+- Prehliadač odošle požiadavku na zoznam podujatí.
+- Prezentačná vrstva prijme HTTP požiadavku.
+- Aplikačná vrstva spustí prípad použitia „získať zoznam podujatí“.
+- Dátová vrstva načíta údaje z databázy.
+- Výsledok sa vráti cez prezentačnú vrstvu do prehliadača.
+
+Doplnil, že verejné prehliadanie môže byť dostupné aj bez prihlásenia a že všetky vrstvy patria do jednej nasadzovanej aplikácie.
+
+
+3. ŠTRUKTÚRA PRIEČINKOV A SÚBOROV
+----------------------------------
+
+POUŽÍVATEĽ:
+Spýtal/a si sa, aká by mohla byť štruktúra priečinkov a súborov.
+
+ASISTENT:
+Navrhol oddeliť frontend od backendu. Backend rozdelil na:
+- presentation: routes, controllers, middleware a DTO;
+- application: prípady použitia;
+- domain: pojmy a pravidlá podujatí, rezervácií, vstupeniek a používateľov;
+- infrastructure: databázu, platby, e-mail a bezpečnostné integrácie.
+
+Doplnil priečinky pre konfiguráciu, migrácie, seedy a testy. Zdôraznil, že štruktúra je len jedna možnosť; podstatné je zachovať zodpovednosti vrstiev.
+
+
+4. VYTVORENIE PODUJATIA MANAŽÉROM
+----------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si o detailný priebeh vytvorenia novej udalosti manažérom. Pýtal/a si sa, kde sa overuje oprávnenie a čo sa stane pri neplatných údajoch alebo zlyhaní uloženia.
+
+ASISTENT:
+Opísal tok od formulára po databázu:
+- Prezentačná vrstva prijme formulár a overí prihlásenie a základný formát požiadavky.
+- Aplikačná vrstva vykoná prípad použitia a overí rolu manažéra.
+- Aplikačná a doménová logika overia obchodné pravidlá.
+- Dátová vrstva uloží podujatie.
+- Server vráti výsledok alebo chybu.
+
+Vysvetlil, že neprihlásenému používateľovi sa vráti 401, používateľovi bez oprávnenia 403 a neplatné údaje sa odmietnu. Pri zlyhaní uloženia sa nesmie predstierať úspech. Identita manažéra sa má odvodiť z overeného prihlásenia, nie z hodnoty dodanej klientom.
+
+
+5. IDENTITA, ROLA A DUPLICITY PRI VYTVÁRANÍ PODUJATIA
+------------------------------------------------------
+
+POUŽÍVATEĽ:
+Spýtal/a si sa, ako middleware zistí identitu a rolu používateľa a ako sa zabráni duplicitnému vytvoreniu udalosti.
+
+ASISTENT:
+Vysvetlil serverovú reláciu ako jednu možnosť:
+- používateľ sa prihlási;
+- server vytvorí reláciu a prehliadač dostane jej náhodný identifikátor v cookie;
+- middleware overí reláciu a zistí identitu;
+- server z dôveryhodných údajov relácie alebo databázy zistí rolu.
+
+Ako alternatívu spomenul JWT, pri ktorom treba overiť podpis a platnosť, nie iba token dekódovať.
+
+Rozlíšil dve situácie:
+- Opakovanie tej istej požiadavky, napríklad po dvojitom kliknutí alebo sieťovom retry: použiť stabilný idempotency key, aby sa nevytvoril druhý záznam.
+- Dve samostatné požiadavky na obchodne podobné udalosti: najprv definovať, čo znamená duplicita, a pravidlo vynútiť databázovým unikátnym obmedzením.
+
+
+6. PRVÝ PODROBNÝ SCENÁR NÁKUPU VSTUPENKY
+-----------------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si o podrobný scenár nákupu vstupenky v rámci vrstveného monolitu. Scenár mal začínať výberom podujatia a počtu vstupeniek a končiť získaním vstupenkového kódu. Pýtal/a si sa, kedy sa vstupenka považuje za predanú, kedy sa rezervuje kapacita a čo robia jednotlivé vrstvy.
+
+ASISTENT:
+Rozlíšil dostupnú, rezervovanú a predanú kapacitu:
+- Prezentačná vrstva prijme požiadavku a skontroluje prihlásenie a formát údajov.
+- Aplikačná logika overí podujatie, množstvo a cenu.
+- Dátová vrstva v databázovej transakcii vytvorí objednávku čakajúcu na platbu a rezervuje kapacitu.
+- Aplikácia požiada platobnú bránu o platobnú reláciu.
+- Po dôveryhodnom potvrdení platby sa objednávka označí ako zaplatená a vstupenky dostanú jedinečné kódy.
+- Používateľ dostane potvrdenie a vstupenky v účte; e-mail môže byť doplnkovým kanálom.
+
+Vysvetlil, že kapacita sa rezervuje po úspešnom uložení rezervácie v databáze. Vstupenka sa považuje za predanú až po overení platby a bezpečnom uložení zmeny. Samotný návrat používateľa na stránku úspešnej platby nie je dôkazom platby. Rezervácia potrebuje expiráciu.
+
+POUŽÍVATEĽ – TVOJE POCHOPENIE:
+Neskôr si vlastnými slovami zhrnul/a:
+„Posledná vstupenka sa musí rezervovať atomicky, aby ju dvaja zákazníci nemohli získať naraz. Teda Databáza dovolí uspieť jednej požiadavke; druhá zistí, že už neexistujú voľné vstupenky. Ak používateľ nezaplatí a rezervácia vyprší, kapacita sa môže uvoľniť.“
+
+ASISTENT – SPÄTNÁ VÄZBA:
+Toto pochopenie je správne. Spresnenie: expiračný proces má kapacitu uvoľniť iba vtedy, ak rezervácia stále čaká na platbu. Musí byť bezpečný aj pri súbehu s potvrdením platby, aby neuvoľnil už potvrdenú rezerváciu.
+
+
+7. POSLEDNÁ VSTUPENKA, EXPIRÁCIA, PLATBA A E-MAIL
+--------------------------------------------------
+
+POUŽÍVATEĽ:
+Spýtal/a si sa:
+- ako databáza zabráni dvom zákazníkom rezervovať posledné vstupenky a čo sa vykonáva v transakcii;
+- ako sa rezervácia uvoľní po expirácii;
+- čo sa stane pri neskorej platbe, ak kapacitu už kúpil iný používateľ;
+- ako sa nestratí informácia o platbe pri zlyhaní medzi platobnou bránou a databázou;
+- ako sa zabráni opakovanému e-mailu.
+
+ASISTENT:
+Pri poslednej vstupenke vysvetlil atomickú podmienenú aktualizáciu: databáza zníži dostupný počet iba vtedy, ak ho ešte je dosť. Pri súbehu uspeje len jedna rezervácia. Kontrolu a zmenu kapacity nemožno bezpečne rozdeliť na samostatné „prečítaj“ a „neskôr zníž“.
+
+Rezerváciu po expirácii uvoľňuje proces na pozadí. V transakcii overí, že rezervácia stále čaká na platbu a jej expirácia už nastala, označí ju ako expirovanú a vráti kusy z rezervovaných do dostupných.
+
+Pri neskorej platbe sa nesmie vydať vstupenka navyše. Ak je kapacita ešte voľná, možno sa pokúsiť rezerváciu obnoviť. Ak ju už kúpil niekto iný, treba použiť dohodnutý postup, napríklad vrátenie platby. Ako ďalšiu možnosť asistent spomenul autorizáciu a neskoršie zúčtovanie platby, ak to poskytovateľ podporuje.
+
+Pri strate informácie o platbe vysvetlil, že databázová transakcia nemôže zahŕňať externú platobnú bránu. Navrhol overené a trvalo uložené webhooky, deduplikáciu podľa ID udalosti, opakované doručenie a zosúlaďovanie čakajúcich objednávok s platobnou bránou.
+
+Pri e-mailoch navrhol outbox a jedinečné ID úlohy. Upozornil, že bez podpory poskytovateľa nemožno absolútne zaručiť odoslanie e-mailu presne raz. Vstupenka preto má byť dostupná aj v účte používateľa.
+
+POUŽÍVATEĽ – TVOJE POCHOPENIE:
+Zhrnul/a si:
+„Aplikácia označí objednávku ako zaplatenú a vystaví vstupenku až po overiteľnom potvrdení od platobnej brány.“
+
+ASISTENT – SPÄTNÁ VÄZBA:
+Toto pochopenie je správne. Potvrdenie musí byť dôveryhodne overené, napríklad ako platobný webhook. Samotné presmerovanie používateľa na stránku s úspešnou platbou nestačí.
+
+
+8. MODULÁRNY MONOLIT A JEHO ROZDIEL OD VRSTVENÉHO
+--------------------------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si o vysvetlenie modulárneho monolitu na príkladoch EventTicketu a o jasné porovnanie s prvým návrhom. Chcel/a si rozumieť rozdielom v kóde, dátach a komunikácii, nie iba výhodám a nevýhodám.
+
+ASISTENT:
+Vysvetlil, že modulárny monolit je stále jedna aplikácia a jedno nasadenie, ale rozdelená na funkčné moduly, napríklad Identity, Events, Orders, Payments, Tickets a Notifications. Každý modul môže mať vlastné vrstvy.
+
+Rozdiel zhrnul takto:
+- Vrstvený monolit sa člení najmä na presentation, application, domain a infrastructure.
+- Modulárny monolit sa člení najmä na funkčné oblasti, napríklad modules/events a modules/orders; vo vnútri modulov môžu byť ďalšie vrstvy.
+
+Moduly komunikujú cez interné rozhrania alebo udalosti v rámci jedného procesu. Môžu používať spoločnú databázovú infraštruktúru, no každý má spravovať svoje tabuľky; ostatní k nim nemajú pristupovať priamo.
+
+
+9. VLASTNÍCTVO KAPACITY A ZÁVISLOSTI MEDZI MODULMI
+--------------------------------------------------
+
+POUŽÍVATEĽ:
+Spýtal/a si sa:
+- kto má vlastniť informáciu o kapacite a prečo;
+- ako môže Orders rezervovať kapacitu bez priameho čítania alebo úpravy tabuliek Events;
+- čo sa stane, ak sa zmení dátový model podujatia.
+
+ASISTENT:
+Navrhol rozdelenie:
+- Events vlastní opisné údaje o podujatí;
+- Orders vlastní objednávky;
+- Inventory vlastní predajnú kapacitu, rezervované a predané kusy.
+
+Orders volá verejné rozhranie Inventory, ktoré samo kontroluje a mení vlastné dáta. Orders si môže cez Events vyžiadať informácie potrebné na predaj. Stabilné rozhranie znamená, že Events môže meniť svoju internú databázovú štruktúru bez toho, aby Orders musel poznať jeho tabuľky.
+
+Doplnil, že pri spoločnej databáze možno niektoré lokálne zmeny koordinovať v jednej transakcii. Platobná brána však zostáva externá.
+
+
+10. TVOJE ZHRNUTIE MODULÁRNEHO MONOLITU
+---------------------------------------
+
+POUŽÍVATEĽ:
+Zhrnul/a si vlastnými slovami:
+„Modul Orders spravuje objednávky, keď potrebuje rezervovať vstupenky, zavolá Inventory. Events spravuje údaje o podujatí. Modulárny monolit -> zmena tabuliek jedného modulu by nemala rozbiť ostatné.“
+
+Požiadal/a si o opravu, ak si niečo nesprávne pochopil/a.
+
+ASISTENT:
+Potvrdil, že zhrnutie je správne, a spresnil, že kapacitu môže vlastniť samostatný Inventory alebo ju môže spravovať Events. Dôležité je, aby Orders nepracoval priamo s cudzími tabuľkami. Ochranu pred rozbitím ostatných modulov zabezpečujú dodržiavané hranice a stabilné rozhrania; samotné rozdelenie tabuliek nestačí.
+
+
+11. MIKROSLUŽBY A NÁKUP POSLEDNEJ VSTUPENKY
+--------------------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si o vysvetlenie tretej architektúry: rozdelenie služieb, ich dát a komunikácie. Chcel/a si aj porovnanie na scenári poslednej vstupenky, platby a e-mailu. Dodal/a si, že si potom pripravíš vlastné zhrnutie a prípadne sa opýtaš na nejasnosti.
+
+ASISTENT:
+Rozdelil EventTicket na služby Identity, Events, Inventory, Orders, Payments, Tickets a Notifications. Každá služba vlastní svoje dáta a komunikuje cez sieťové API alebo asynchrónne správy; API Gateway môže byť vstupným bodom pre požiadavky prehliadača.
+
+Pri nákupe:
+- Orders požiada Inventory o rezerváciu.
+- Inventory atomicky rozhoduje o dostupnosti.
+- Payments komunikuje s platobnou bránou.
+- Po potvrdení sa objednávka a kapacita dokončia.
+- Tickets vystaví kódy.
+- Notifications odošle e-mail.
+
+Asistent rozlíšil synchronné API volania, ktoré vracajú potrebný výsledok, a asynchrónne udalosti, ktoré oznamujú dokončenú zmenu. Upozornil na opakovanie a oneskorenie správ, dočasnú nedostupnosť, idempotentné spracovanie, trvalé uloženie udalostí a prípadné kompenzačné kroky.
+
+Vysvetlil, že pri mikroslužbách neexistuje jedna transakcia pokrývajúca objednávku, Inventory, platobnú bránu a vystavenie vstupenky.
+
+
+12. STRATENÁ ODPOVEĎ INVENTORY -> ORDERS
+-----------------------------------------
+
+POUŽÍVATEĽ:
+Spýtal/a si sa, čo sa stane, ak Inventory úspešne uloží rezerváciu, ale odpoveď sa cestou do Orders stratí.
+
+ASISTENT:
+Vysvetlil, že timeout znamená „výsledok neznámy“, nie „operácia určite zlyhala“. Orders má poslať rezerváciu so stabilným orderId alebo idempotency key. Inventory uloží rezerváciu s týmto identifikátorom a databázové unikátne obmedzenie zabráni vytvoreniu druhej rezervácie pre tú istú operáciu.
+
+Ak odpoveď chýba, Orders zopakuje požiadavku s tým istým identifikátorom. Inventory vráti už vytvorenú rezerváciu alebo ju vykoná, ak ešte neprebehla. Orders môže tiež zistiť stav rezervácie. Kým výsledok nie je známy, nemá začať nový nákup s iným identifikátorom. Nedokončená rezervácia sa uvoľní po expirácii.
+
+
+13. TVOJE ZHRNUTIE MIKROSLUŽIEB A TRADE-OFFOV
+----------------------------------------------
+
+POUŽÍVATEĽ:
+Zhrnul/a si:
+„Mikroslužby rozdeľujú systém na samostatne nasadzované služby, ktoré komunikujú cez sieť.
+Inventory = dostupnosť a rezervácia kapacity.
+Mikroslužby uľahčujú nasadzovanie a škálovanie, ale prinášajú väčšiu prevádzkovú a vývojovú zložitosť.
+Jedna transakcia tu už nestačí na potvrdenie nákupu a preto sa môžu vyskytnúť problémy ako opakované správy / oneskorené.“
+
+Spýtal/a si sa, či sú tieto tvrdenia pravdivé.
+
+ASISTENT:
+Potvrdil ich a spresnil, že každá služba môže mať vlastnú transakciu, no celý nákup sa koordinuje postupne. Opakované správy nie sú samy osebe chyba; služba ich musí spracovať idempotentne, aby opakovanie nevytvorilo ďalšiu rezerváciu, platbu alebo vstupenku.
+
+
+14. TVOJE ZHRNUTIE TROCH ARCHITEKTÚR
+-------------------------------------
+
+POUŽÍVATEĽ:
+Zhrnul/a si:
+„Vrstevný monolit - členenie aplikácie podľa technických vrstiev. Modulárny - systém s jasne oddelenými funkčnými a dátovými oblasťami. Mikroslužby - služby s vlastnými dátami/nezávislé služby.“
+
+Spýtal/a si sa, či je to správne.
+
+ASISTENT:
+Potvrdil zhrnutie a spresnil:
+- Vrstvený monolit je jedna aplikácia členená podľa technických vrstiev.
+- Modulárny monolit je jedna aplikácia rozdelená podľa funkčných oblastí; moduly môžu používať spoločnú databázu, ale nemajú priamo pracovať s tabuľkami iných modulov.
+- Mikroslužby sú samostatne nasadzované služby s vlastnými dátami a komunikáciou cez sieťové API alebo správy.
+
+Doplnil, že modulárny monolit môže byť zároveň vrstvený: moduly označujú funkčné oblasti a vrstvy technické zodpovednosti.
+
+
+15. KONTROLA POKRYTIA VŠETKÝCH POŽIADAVIEK
+-------------------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si, aby sa pred uzavretím diskusie skontrolovalo, či boli pri troch architektúrach zohľadnené všetky časti EventTicketu, nielen nákup vstupeniek. Vymenoval/a si registráciu a prihlasovanie s rolami, osobné stránky, správu podujatí a manažérov, obľúbené kategórie a e-mailové upozornenia, obnovu hesla, predpredaj a zakúpené vstupenky. Chcel/a si pri každej oblasti vedieť, kam patrí v každej architektúre a či vzniká podstatný rozdiel alebo kompromis. Znova si priložil/a celé požiadavky.
+
+ASISTENT:
+Doplnil umiestnenie oblastí v troch architektúrach:
+- Verejné prehliadanie patrí do prezentačnej a aplikačnej vrstvy, modulu Events alebo služby Events.
+- Účty a roly patria do aplikačných vrstiev, modulu Identity alebo služby Identity.
+- Osobné stránky skladajú profil a údaje o objednávkach či vstupenkách.
+- Manažérske podujatia patria k Events a vyžadujú serverové overenie roly.
+- Obľúbené kategórie patria k preferenciám/profilu a e-mailové upozornenia k notifikáciám.
+- Obnova hesla patrí k identite a využíva e-mailové doručenie.
+- Predpredaje, objednávky a vstupenky patria k príslušným modulom alebo službám.
+
+Pri mikroslužbách môžu osobné stránky a upozornenia vyžadovať údaje z viacerých služieb; pridávajú sa sieťové volania, oneskorenia a čiastočná nedostupnosť. Zostali otvorené pravidlá, ktoré zadanie neurčuje, napríklad podrobnosti predpredaja, dĺžka rezervácie a refundácie.
+
+
+17. TVOJE VLASTNÉ POCHOPENIE RETRY A KOMPENZÁCIE
+------------------------------------------------
+
+POUŽÍVATEĽ:
+Vlastnými slovami si doplnil/a:
+„retry sa pokúša dokončiť tú istú operáciu, kompenzácia sa pokúša napraviť jej medzivýsledok.“
+
+ASISTENT – SPÄTNÁ VÄZBA:
+Toto rozlíšenie je správne:
+- Retry opakuje tú istú logickú operáciu, ideálne s rovnakým identifikátorom, aby nevznikla duplicita.
+- Kompenzácia sa pokúša napraviť účinok kroku, ktorý už prebehol, napríklad uvoľniť rezerváciu alebo vrátiť platbu, ak sa nákup nedá dokončiť.
+
+Kompenzácia nie je vždy doslovné vrátenie systému do pôvodného stavu; je to samostatná akcia, ktorá má výsledok uviesť do prijateľného stavu.
+
+
+MOJE POCHOPENIE A TRADE-OFFY
+-----------------------------
+
+Z tvojich vlastných zhrnutí vyplýva, že rozlišuješ tri architektúry takto:
+
+- Vrstvený monolit: aplikácia je členená podľa technických vrstiev.
+- Modulárny monolit: jedna aplikácia má jasne oddelené funkčné a dátové oblasti.
+- Mikroslužby: systém tvorí viac nezávisle nasadzovaných služieb s vlastnými dátami a komunikáciou cez sieť.
+
+Pri modulárnom monolite si správne pomenoval/a vzťah Events – Orders – Inventory: Events spravuje údaje o podujatí, Orders spravuje objednávky a pri rezervácii volá Inventory. Zmena interných tabuliek jedného modulu by pri používaní stabilných rozhraní nemala automaticky rozbiť ostatné moduly.
+
+Pri mikroslužbách si správne pomenoval/a hlavný trade-off: nezávislé nasadzovanie a škálovanie sú výhodou, ale zvyšujú vývojovú a prevádzkovú zložitosť. Zároveň si zachytil/a, že celý nákup nemožno potvrdiť jednou spoločnou transakciou a treba počítať s opakovanými alebo oneskorenými správami.
+
+Pri nákupe vstupeniek si vlastnými slovami zhrnul/a, že:
+- posledná vstupenka sa musí rezervovať atomicky, aby ju nezískali dvaja zákazníci naraz;
+- pri expirácii nezaplatenej rezervácie sa môže kapacita uvoľniť;
+- objednávka sa označí ako zaplatená a vstupenka sa vystaví až po overiteľnom potvrdení platobnej brány;
+- retry opakuje tú istú operáciu, zatiaľ čo kompenzácia napravuje jej čiastočný výsledok.
+
+Tieto pochopenia boli v diskusii potvrdené s doplnením, že expirácia musí bezpečne súťažiť s potvrdením platby a že pri retry sa má zachovať rovnaký identifikátor operácie.
+
+
+ZÁVER DISKUSIE
+---------------
+Diskusia začala návrhom troch architektúr pre EventTicket. Potom sa zamerala na vrstvený monolit: priechod požiadavky, štruktúru projektu, oprávnenia manažéra a nákup vstupeniek. Následne sa rozoberali súbežné rezervácie, expirácia, neskoré platby, strata platobného potvrdenia a opakované e-maily.
+
+Ďalšia časť sa venovala modulárnemu monolitu a vlastníctvu dát medzi Events, Orders a Inventory. Potom sa prešlo na mikroslužby, ich nezávislé nasadzovanie, vlastníctvo dát, komunikáciu cez sieť a riešenie stratených odpovedí.
+
+Tvoje vlastné zhrnutia zachytili hlavné rozdiely medzi architektúrami, význam Inventory pre kapacitu a kompromis mikroslužieb medzi nezávislosťou a vyššou zložitosťou. Pri nákupe si vlastnými slovami pomenoval/a atomickú rezerváciu, potvrdenie platby pred označením objednávky ako zaplatenej a rozdiel medzi retry a kompenzáciou.

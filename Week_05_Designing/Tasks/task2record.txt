@@ -1,0 +1,95 @@
+POZNÁMKY Z TASKU 2: ADR PRE ARCHITEKTÚRU EVENTTICKETU
+
+Poznámka k záznamu
+------------------
+Toto je chronologický záznam Tasku 2 podľa konverzácie v tomto chate. Nie je to doslovný prepis. Časti „POUŽÍVATEĽ“ zachytávajú tvoje skutočné požiadavky a pripomienky; časti „ASISTENT“ zachytávajú návrhy a zmeny vykonané v ADR. Podpora odporúčania nie je označená ako formálne tímové schválenie, pretože to v konverzácii nezaznelo.
+
+
+1. ZAČIATOK TASKU 2
+-------------------
+
+POUŽÍVATEĽ:
+Oznámil/a si, že sa začína Task 2. Počas celej diskusie si chcel/a viesť poznámky o tvojich pripomienkach, návrhoch asistenta, zmenách ADR a dôvodoch týchto zmien. Na konci z nich má vzniknúť záznam rozhovoru. Výslovne si požiadal/a, aby sa neuvádzalo, že si niečo povedal/a alebo schválil/a, ak sa to nestalo.
+
+ASISTENT:
+Spýtal sa, čo Task 2 zahŕňa a ktoré ADR alebo podklady sa ho týkajú.
+
+
+2. POŽIADAVKY NA PRVÝ NÁVRH ADR A JEHO KONTROLU
+-------------------------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si, aby sa na základe diskusie a reportu z Tasku 1 vytvoril prvý návrh ADR pre architektúru EventTicketu. Chcel/a si v ňom:
+
+- názov a stav rozhodnutia;
+- kontext a relevantné požiadavky systému;
+- jedno jasné rozhodnutie a dôvody výberu;
+- všetky tri zvažované alternatívy a ich relevantné výhody, nevýhody a trade-offy pre EventTicket;
+- dôsledky vybranej možnosti vrátane náročných implementačných častí;
+- predpoklady a otvorené otázky, ktoré požiadavky neurčujú.
+
+Zároveň si uviedol/la, že modulárny monolit bol v Tasku 1 odporúčaný, ale konečné rozhodnutie má byť vysvetlené a ponechané na tvoju kontrolu. Nechcel/a si vymyslené požiadavky, napríklad počet používateľov, SLA, konkrétne technológie alebo rozpočet. Požiadal/a si aj o kontrolu kvality návrhu: či rieši správny problém, či férovo porovnáva alternatívy, či uvádza obete výberu, či pokrýva ťažké časti nákupu a či označuje neznáme pravidlá ako otvorené. Priložil/a si report z Tasku 1 a prednášku o architektúre, trade-offoch a ADR.
+
+ASISTENT:
+Zohľadnil report z Tasku 1 a prednášku. Upravil ADR tak, aby malo štruktúru návrhu rozhodnutia, obsahovalo kontext, odporúčanie, alternatívy, dôsledky a otvorené otázky. Modulárny monolit ponechal ako návrh, nie ako schválené rozhodnutie.
+
+Pri porovnaní využil kvalitatívne architektonické oblasti, ako sú výkon a škálovanie, dostupnosť, bezpečnosť, udržiavateľnosť, nasadzovanie, zložitosť a náklady. Keďže zadanie neposkytuje merateľné ciele ani priority, nepridal číselné skóre ani váhy.
+
+V dôsledkoch zachoval náročné časti, ktoré sa preberali v Tasku 1: atomickú rezerváciu poslednej vstupenky, expiráciu rezervácie, overiteľné potvrdenie platby, neskorú platbu, opakované spracovanie a e-mail. Doplnil aj otázku, či kapacitu vlastní samostatný Inventory, alebo Events.
+
+Výsledkom bol súbor ADR-001-eventticket-architecture.md.
+
+
+3. PODPORA MODULÁRNEHO MONOLITU
+--------------------------------
+
+POUŽÍVATEĽ:
+Po prečítaní návrhu si uviedol/la, že podporuješ modulárny monolit ako odporúčanú architektúru pre EventTicket. Požiadal/a si, aby ADR pomenovalo známe požiadavky, ktoré túto voľbu podporujú, zachovalo porovnanie všetkých troch možností a neuvádzalo vymyslené metriky ani technológie.
+
+ASISTENT:
+Aktualizoval ADR tak, aby:
+
+- jeho stav vyjadroval, že používateľ podporil odporúčanie, no formálne tímové schválenie nebolo uvedené;
+- dôvody odporúčania priamo vychádzali zo známych používateľských príbehov;
+- zachovalo porovnanie vrstveného monolitu, modulárneho monolitu a mikroslužieb;
+- nepridávalo nepodložené metriky, váhy, technológie ani prevádzkové požiadavky.
+
+Ako podporujúce požiadavky uviedol odlišné funkčné oblasti EventTicketu, rozličných vlastníkov údajov a operácií, potrebu koordinovať oblasti pri nákupe a to, že zadanie nevyžaduje samostatné nasadzovanie služieb. Doplnil, že stabilné rozhrania modulov obmedzujú previazané závislosti.
+
+Tvoje vyjadrenie zaznamenal ako podporu odporúčania. Neoznačil ho za formálne tímové schválenie.
+
+
+4. PRIPOMIENKA K OPAKOVANIU A FÉROVOSTI POROVNANIA
+---------------------------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si o kontrolu, či porovnávacia tabuľka zbytočne neopakuje informácie. Výslovne si požiadal/a, aby v ADR zostali podrobnosti o súbežnej rezervácii kapacity, expirácii, dôveryhodnom potvrdení platby, opakovanom spracovaní a e-maile. Zároveň si chcel/a férové porovnanie všetkých troch alternatív.
+
+ASISTENT:
+Skontroloval tabuľku voči ostatným častiam ADR. Skrátil opakujúce sa vysvetlenia v tabuľke a ponechal podrobnosti o náročných implementačných častiach v dôsledkoch.
+
+Tabuľku preformuloval na porovnanie nasadenia a škálovania, dostupnosti a zlyhaní, bezpečnostných hraníc, udržiavateľnosti a zložitosti. Doplnením upozornil, že vrstvený monolit možno tiež navrhnúť s funkčnými hranicami; tieto hranice však nevyplývajú zo samotného členenia podľa technických vrstiev. Pri mikroslužbách uviedol, že nezávislé nasadzovanie a škálovanie sú možnosti, nie automatický dôkaz vyššej bezpečnosti alebo dostupnosti.
+
+Podrobnosti o kapacite, expirácii, platbe, opakovanom spracovaní a e-mailoch zostali v časti implementačných dôsledkov.
+
+
+5. SPRESNENIE RETRY A KOMPENZÁCIE
+----------------------------------
+
+POUŽÍVATEĽ:
+Požiadal/a si, aby sa dôsledok „Retry a kompenzácia“ spresnil a aby ADR nevyvolávalo dojem, že modulárny monolit automaticky potrebuje sagy.
+
+ASISTENT:
+Upravil dôsledok tak, aby rozlišoval:
+
+- **Retry:** opätovné vykonanie tej istej operácie po dočasnej chybe alebo neznámom výsledku. Pri operácii s možným vedľajším účinkom sa má použiť rovnaký idempotency key, aby opakovanie nevytvorilo duplicitu.
+- **Kompenzáciu:** samostatnú obchodnú akciu na nápravu kroku, ktorý už bol potvrdený a nedá sa jednoducho vrátiť transakciou, napríklad uvoľnenie rezervácie alebo vrátenie platby.
+
+Doplnil, že lokálne databázové zmeny modulárneho monolitu sa spravidla koordinujú transakciami a že samotný modulárny monolit sagu nevyžaduje. Kompenzácia môže byť potrebná pri externom vedľajšom účinku alebo procese, ktorý nemožno pokryť jednou lokálnou transakciou.
+
+
+STAV ADR PO ÚPRAVÁCH
+--------------------
+ADR odporúča modulárny monolit a túto možnosť si podporil/a ako odporúčanú architektúru. Porovnanie zachováva všetky tri architektúry a kvalitatívne pomenúva ich rozdiely bez vymyslených čísel alebo technológií. Implementačné dôsledky zahŕňajú rezerváciu, expiráciu, platbu, opakovanie operácií, kompenzácie a e-mail.
+
+ADR neuvádza, že rozhodnutie bolo formálne schválené tímom alebo inými rozhodovateľmi. Otvorené produktové a prevádzkové otázky zostávajú nevyriešené. Aktuálny súbor je ADR-001-eventticket-architecture.md.

@@ -1,0 +1,109 @@
+TASK 3 — POROVNÁVACÍ REPORT
+EventTicket: diskusia a ADR bez skillu vs. s architecture-decision-workflow
+
+ZHRNUTIE
+
+Záznamy bez skillu dokumentujú podstatne dlhšiu a detailnejšiu diskusiu,
+najmä pri Tasku 1. V novej diskusii so skillom sa tri architektúry porovnali
+a prešli sa dva implementačne náročné scenáre; asistent zároveň trikrát
+vyzval používateľa na vysvetlenie vlastného porozumenia. Vznikol nový ADR.
+Počet výmen je menší, ale rozsah diskusie nie je rovnaký a časové údaje ani
+kontrolované merania nemáme. Preto nemožno tvrdiť, že skill prácu zrýchlil
+alebo že celkový výsledok je lepší.
+
+POROVNANIE
+
+Ukazovateľ                 Bez skillu                         S architecture-decision-workflow
+-------------------------  ---------------------------------  -----------------------------------------
+Záznamy a rozsah           task1record.txt a task2record.txt  Diskusia je v histórii tejto session;
+                                                              task3record.txt zaznamenáva najmä
+                                                              následnú opravu a uloženie súborov.
+Výmeny                     Task 1: 18 párov označených        5 párov od zadania po prvý návrh ADR
+                           POUŽÍVATEĽ/ASISTENT; Task 2:       v chate; potom 1 viditeľná iterácia
+                           5 párov. Spolu 23.                po pripomienke k Tickets.
+Tri architektúry           Vrstvený monolit, modulárny        Vrstvený monolit, modulárny monolit
+                           monolit a mikroslužby; rozsiahly  a mikroslužby, vysvetlené a porovnané
+                           prechod cez požiadavky a návrhové v spoločnej tabuľke.
+                           príklady.
+Trade-offy                 Nasadenie, vrstvy/moduly,          Jednotka nasadenia, vlastníctvo dát,
+                           vlastníctvo dát, sieťová          komunikácia, zlyhania, škálovanie,
+                           komunikácia, nezávislé             bezpečnostné hranice, zložitosť a
+                           nasadzovanie/škálovanie a          prevádzkové kompromisy; bez
+                           distribuovaná zložitosť.           nepodložených čísel.
+Ťažké scenáre              Posledná vstupenka, expirácia,     Súbeh o posledný lístok, expirácia
+                           neskorá/opakovaná platba,          s platbou, platba po expirácii a
+                           stratená odpoveď Inventory,        riziko refundácie; e-mailový outbox,
+                           webhooky, idempotencia, e-mail,    opakovanie a možná duplicita.
+                           retry a kompenzácia.
+Overenie porozumenia       Opakované vlastné zhrnutia         3 explicitné kontrolné body:
+                           používateľa a spätná väzba,       rozdiel vrstvený/modulárny monolit a
+                           vrátane nákupu a rozdielov         rezervácia; expirácia a neskorá
+                           architektúr.                       platba; outbox a e-mail.
+Úpravy ADR                 task2record.txt opisuje prvý       Prvý návrh bol vytvorený v chate.
+                           návrh a 3 kolá revízií: stav a    Po pripomienke sa doplnilo jasné
+                           dôvody, skrátenie opakovaní a     vlastníctvo Tickets, jeho vzťah k
+                           férové porovnanie, spresnenie      Orders/Payments a diagram. Nová
+                           retry/kompenzácie.                 verzia je uložená ako ADRtask3.txt.
+
+ÚSILIE A RÝCHLOSŤ
+
+Počty starších výmen sú spočítané z oddelených označení v záznamoch:
+18 párov v Tasku 1 a 5 v Tasku 2. Nová diskusia mala 5 párov do prvého ADR
+a jednu následnú opravnú iteráciu týkajúcu sa Tickets. Počty nie sú
+rovnocenným meraním úsilia: starý Task 1 prešiel viac používateľských
+príbehov a podrobnejšie implementačné scenáre; nová diskusia sa sústredila
+na porovnanie troch architektúr, posledný lístok a zlyhanie e-mailu.
+Nemáme spoľahlivo zaznamenaný čas práce, rovnaký rozsah úloh ani kontrolované
+meranie. Z nižšieho počtu výmen preto nevyplýva, že práca bola rýchlejšia.
+
+POKRYTIE A VÝSLEDOK
+
+Starý záznam Tasku 1 má väčšiu šírku a hĺbku implementačných príkladov:
+zahŕňa tvorbu podujatia, identitu/rolu, duplicity, úplný tok nákupu,
+stratenú odpoveď medzi službami a ďalšie používateľské príbehy. Nová
+diskusia so skillom pokryla všetky tri architektúry a porovnala ich
+podstatné rozdiely, ale nerozobrala každý príbeh rovnako podrobne.
+
+Nová diskusia sa viac sústredila na to, aby sa neznáme pravidlá označili
+ako otvorené, aby sa nepredpokladali metriky či technológie a aby sa
+odporúčanie nezamieňalo za používateľské schválenie. ADRtask3.txt obsahuje
+kontext, stav „Navrhnuté“, tri alternatívy, dôvody, dôsledky, riziká,
+otvorené otázky, diagram a samostatný modul Tickets. Používateľ však
+architektúru v tejto diskusii výslovne nevybral ani neschválil.
+
+PRESNOSŤ ZÁZNAMOV A OBMEDZENIA
+
+Pôvodné task1record.txt a task2record.txt používajú samostatné označenia
+POUŽÍVATEĽ a ASISTENT a uvádzajú, že ide o parafrázované poznámky, nie
+doslovný prepis. Task 1 výslovne oddeľuje používateľove vlastné zhrnutia
+od spätnej väzby asistenta. To je užitočné rozlíšenie, no bez pôvodného
+zvukového alebo doslovného prepisu nemožno nezávisle overiť každú parafrázu
+v týchto starších záznamoch.
+
+Nová diskusia v chate rozlišovala používateľove odpovede od vysvetlení
+asistenta a ADR správne ponecháva stav ako návrh. Samostatný task3record.txt
+však zachytáva predovšetkým neskoršiu opravu súborov, nie úplný záznam
+prvotnej architektonickej diskusie. Pri oprave asistent najprv nesprávne
+prepísal existujúce súbory; následne obnovil pôvodné záznamy z histórie
+VS Code a vytvoril samostatnú verziu ADR. Táto udalosť je dôležitá pre
+úplný opis priebehu, nie je dôkazom vyššej efektivity skillu.
+
+ZÁVER
+
+Skillový postup priniesol porovnateľnú základnú kostru rozhodnutia,
+explicitné kontroly porozumenia a ADR s jasne označenými predpokladmi,
+otvorenými otázkami a stavom rozhodnutia. Pôvodná diskusia bez skillu
+obsahuje viac zdokumentovaných výmen a v Tasku 1 širšie pokrytie
+implementačných príkladov. Dostupné podklady podporujú tieto kvalitatívne
+rozdiely, nie tvrdenie o rýchlosti alebo celkovej nadradenosti jednej
+verzie.
+
+PODKLADY
+
+- Week_05_Designing/Tasks/task1record.txt — pôvodný záznam Tasku 1 bez skillu.
+- Week_05_Designing/Tasks/task2record.txt — pôvodný záznam Tasku 2 bez skillu.
+- Week_05_Designing/Tasks/ADRtask3.txt — nový ADR vytvorený v skillovej session.
+- Week_05_Designing/Tasks/task3record.txt — záznam následnej opravy a obnovy
+  súborov; nie úplný prepis počiatočnej skillovej diskusie.
+- .github/skills/architecture-decision-workflow/SKILL.md — workflow použité
+  v novej diskusii.

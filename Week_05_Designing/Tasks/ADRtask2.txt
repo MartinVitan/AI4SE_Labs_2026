@@ -1,0 +1,98 @@
+# ADR-001: Architektúra aplikácie EventTicket
+
+**Stav:** Odporúčanie podporené používateľom; formálne tímové schválenie nebolo uvedené  
+**Dátum:** 2026-11-01  
+**Autor návrhu:** Asistent, na základe požiadaviek a diskusie  
+**Rozhodovateľ:** Používateľ podporil modulárny monolit ako odporúčanú architektúru; tímové schválenie nie je v diskusii uvedené
+
+## Kontext
+
+EventTicket je webová aplikácia na objavovanie a správu podujatí a distribúciu vstupeniek. Požiadavky pokrývajú verejné prehliadanie, registráciu a prihlásenie s rolami, osobné stránky, správu podujatí manažérmi a manažérov administrátormi, obľúbené kategórie a e-mailové upozornenia, obnovu hesla, rezerváciu predpredaja a nákup a platbu za vstupenky.
+
+Architektúra musí umožniť bezpečné spracovanie rolí, rezervácií a platieb. Pri nákupe je dôležité zabrániť rezervácii nad dostupnú kapacitu a vydať vstupenku až po overiteľnom potvrdení platby. Tieto požiadavky vyplývajú z funkčných príbehov; zadanie však neurčuje očakávanú záťaž, SLA ani ďalšie kvantifikované nefunkčné požiadavky.
+
+Nie sú určené ani veľkosť tímu, rozpočet, technológie, platobný či e-mailový poskytovateľ a viaceré produktové pravidlá. Tieto neznáme sa preto nepoužívajú ako dôkaz pre konkrétnu voľbu.
+
+## Rozhodnutie
+
+**Odporúčanie: modulárny monolit.** Aplikácia sa bude nasadzovať ako jeden celok, ale bude rozdelená na funkčné moduly s jasným vlastníctvom logiky a dát. Používateľ toto odporúčanie podporil. Či ide aj o formálne schválenie tímom alebo inými rozhodovateľmi, diskusia neurčuje.
+
+Možné moduly:
+
+- `Identity` – účty, autentifikácia, relácie a roly;
+- `Events` – podujatia, kategórie a publikovanie;
+- `Inventory` – predajná kapacita a rezervácie;
+- `Orders` – objednávky a ich stavy;
+- `Payments` – platobné záznamy a integrácia s platobnou bránou;
+- `Tickets` – vydané vstupenky a kódy;
+- `Profiles/Preferences` – profily a obľúbené kategórie;
+- `Notifications` – e-mailové upozornenia.
+
+Moduly budú spolupracovať cez interné rozhrania alebo udalosti. Každý modul bude vlastníkom svojich dát; iné moduly nebudú priamo čítať ani meniť jeho tabuľky. Použitie jednej databázovej infraštruktúry je možné, konkrétna databáza ani technológia sa však týmto ADR neurčuje.
+
+Napríklad `Orders` požiada `Inventory` o rezerváciu a cez rozhranie `Events` získa potrebné informácie o podujatí. Lokálne databázové zmeny možno koordinovať v transakcii, ak sú v jednej databáze. Externú platobnú bránu nemožno zahrnúť do tej istej databázovej transakcie.
+
+## Zvažované alternatívy
+
+| Alternatíva | Nasadenie a škálovanie | Dostupnosť a zlyhania | Bezpečnostné hranice | Udržiavateľnosť a zložitosť |
+|---|---|---|---|---|
+| **Vrstvený monolit** | Jedna nasadzovaná aplikácia; vnútorné volania neprechádzajú sieťou. Škálovanie prebieha na úrovni celku. | Jeden nasadzovaný celok zjednodušuje koordináciu; výpadok aplikácie môže ovplyvniť celý systém. | Kontroly možno sústrediť v jednej aplikácii. Bezpečnosť závisí od správnej implementácie, nie od samotného architektonického štýlu. | Vrstvy oddeľujú technické zodpovednosti. Samy však neurčujú vlastníctvo funkčných oblastí; to treba riešiť návrhom a disciplínou v kóde. |
+| **Modulárny monolit** | Jedna nasadzovaná aplikácia; interná komunikácia neprechádza sieťou. Škálovanie aj nasadenie sa týka celku. | Zdieľaný proces zjednodušuje koordináciu; výpadok aplikácie môže ovplyvniť všetky moduly. | Moduly môžu obmedziť prístup k svojim dátam cez rozhrania. Vynucovanie oprávnení aj ostatná bezpečnosť stále závisia od implementácie. | Funkčné hranice objasňujú vlastníctvo logiky a dát. Vyžadujú dôsledné dodržiavanie a zmeny modulov sa nasadzujú spolu. |
+| **Mikroslužby** | Služby sa môžu nasadzovať a škálovať samostatne; komunikácia cez sieť pridáva integračné kroky. Prínos pre EventTicket nemožno určiť bez cieľov a meraní. | Niektoré služby môžu zostať dostupné pri výpadku inej, ale závislé funkcie môžu zlyhať. Treba navrhovať správanie pri čiastočných výpadkoch. | Samostatné služby vytvárajú hranice procesov, ale vyžadujú zabezpečenie komunikácie a prístupov medzi službami. Samy osebe nezaručujú vyššiu bezpečnosť. | Služby možno meniť a nasadzovať nezávisle, ale koordinácia kontraktov, prevádzky a zmien naprieč službami zvyšuje zložitosť. |
+
+Vrstvený a modulárny monolit nie sú protiklady vo všetkých ohľadoch: vrstvy vyjadrujú technické zodpovednosti, moduly funkčné oblasti. Modulárny monolit môže mať vrstvy vo vnútri každého modulu. Vrstvený monolit možno tiež navrhnúť s funkčnými hranicami; rozdiel v tabuľke je v tom, že také vlastníctvo nie je dôsledkom samotného členenia podľa vrstiev.
+
+## Požiadavky podporujúce odporúčanie
+
+- **Odlišné funkčné oblasti:** používateľské príbehy samostatne pokrývajú účty a roly, podujatia, obľúbené kategórie a upozornenia, predpredaj, nákup, platby a vstupenky. To podporuje rozdelenie kódu podľa zodpovedností.
+- **Rozdielni vlastníci údajov a operácií:** manažér spravuje navrhnuté podujatia; administrátor pridáva manažérov; objednávky, kapacita a vstupenky majú odlišné účely. Moduly môžu tieto hranice vyjadriť bez priameho prístupu k cudzím tabuľkám.
+- **Nákup potrebuje koordináciu viacerých oblastí:** posledná vstupenka vyžaduje atomickú rezerváciu; objednávka čaká na overiteľné potvrdenie platby; následne vznikne vstupenka a môže sa odoslať e-mail. Modulárny monolit umožňuje oddeliť zodpovednosti, pričom vnútorná komunikácia zostáva v jednej aplikácii.
+- **Požiadavky nevyžadujú samostatné nasadzovanie služieb:** zadanie uvádza potrebné funkcie, ale neuvádza potrebu nezávislého škálovania alebo nasadzovania jednotlivých oblastí. Jedno nasadenie je preto v súlade so známymi požiadavkami a nepredpokladá prevádzkové potreby, ktoré neboli zadané.
+- **Stabilné hranice chránia pred previazaním:** ak `Orders` používa rozhranie `Events` alebo `Inventory` namiesto ich interných tabuliek, zmena interného dátového modelu modulu nemusí rozbiť ostatné časti.
+
+## Základ odporúčania
+
+Odporúčanie vyvažuje funkčné hranice a vlastníctvo dát s tým, že EventTicket zostáva jednou nasadzovanou aplikáciou. Vrstvený monolit by tiež pokryl známe funkcie, ale členenie podľa vrstiev samo osebe nevyjadruje funkčné vlastníctvo. Mikroslužby by umožnili samostatné nasadzovanie a škálovanie, no pridali by distribuovanú zložitosť; požiadavky zatiaľ neuvádzajú potrebu týchto vlastností.
+
+Porovnanie kvalitatívne zohľadňuje výkon a škálovanie, dostupnosť, bezpečnosť, udržiavateľnosť a nasadzovanie, zložitosť a náklady. Požiadavky neobsahujú merateľné ciele ani priority pre tieto atribúty. Preto ADR nepriraďuje číselné skóre ani váhy a netvrdí, že niektorá alternatíva dosiahne konkrétny výsledok. Kvantitatívne hodnotenie by vyžadovalo dohodnuté ciele a kritériá.
+
+## Dôsledky
+
+### Očakávané prínosy
+
+- Vlastníctvo funkcií a dát je zrozumiteľnejšie: `Events` spravuje opisné údaje podujatí, `Inventory` kapacitu a rezervácie a `Orders` objednávky.
+- Zmena interných tabuliek jedného modulu by nemala rozbiť iné moduly, ak používajú jeho stabilné rozhranie a neobchádzajú ho priamym prístupom k dátam.
+- Všetky uvedené používateľské oblasti možno pokryť v jednom nasadzovanom systéme; každá nemusí byť samostatnou službou.
+
+### Dôležité implementačné dôsledky
+
+- **Posledná vstupenka:** rezervácia musí byť atomická, aby pri súbežných požiadavkách uspela najviac jedna, ak zostáva jediný kus.
+- **Expirácia:** nezaplatená rezervácia sa môže po expirácii uvoľniť; expirácia musí bezpečne spolupracovať s potvrdením platby a nesmie uvoľniť kapacitu druhýkrát.
+- **Platba a vydanie vstupenky:** objednávka sa označí ako zaplatená a vstupenky sa vystavia až po dôveryhodnom overení potvrdenia platobnej brány. Návrat používateľa na stránku úspechu sám osebe nestačí.
+- **Zlyhanie medzi platbou a databázou:** externá platobná brána a databáza nemajú spoločnú transakciu. Potvrdenia treba trvalo evidovať a idempotentne spracovať; nejasné stavy treba vedieť zosúladiť.
+- **Neskorá platba:** ak rezervácia vypršala a kapacitu už získal iný zákazník, nesmie sa vydať ďalšia vstupenka. Presný postup pre platbu, napríklad vrátenie, zostáva otvorený.
+- **Retry a kompenzácia:** retry sa používa na opätovné vykonanie tej istej operácie po dočasnej chybe alebo neznámom výsledku; pri operácii, ktorá môže vytvoriť záznam či vedľajší účinok, sa použije rovnaký idempotency key, aby opakovanie nevytvorilo duplicitu. Kompenzácia je samostatná obchodná akcia na nápravu kroku, ktorý už bol potvrdený a nedá sa jednoducho vrátiť transakciou, napríklad uvoľnenie rezervácie alebo vrátenie platby. V modulárnom monolite sa lokálne zmeny databázy spravidla koordinujú transakciami; samotná modulárna architektúra nevyžaduje sagu. Kompenzácia môže byť potrebná pri externom vedľajšom účinku alebo pri procese, ktorý nemožno pokryť jednou lokálnou transakciou.
+- **E-mail:** outbox môže trvalo uložiť úlohu na odoslanie spolu s lokálnou databázovou zmenou. Deduplikácia a idempotencia znižujú riziko opakovaného e-mailu, ale bez podpory poskytovateľa nemožno všeobecne zaručiť doručenie presne raz. Vstupenka má byť dostupná aj v účte.
+- **Autorizácia:** oprávnenia sa overujú na serveri. Manažérske ID sa odvodzuje z overenej identity; administrátorské pridanie manažéra vyžaduje kontrolu roly administrátora.
+- **Hranice modulov:** spoločná databáza sama osebe nevytvára modulárny monolit. Kód musí vynucovať, že modul číta a mení vlastné dáta cez svoje rozhranie.
+
+## Predpoklady a otvorené otázky
+
+Pred implementáciou treba spresniť:
+
+- či má byť `Inventory` samostatným modulom, alebo má predajnú kapacitu spravovať `Events`;
+- dĺžku rezervácie, pravidlo expirácie a spracovanie súbehu expirácie s platbou;
+- postup pri neskorej platbe, keď už kapacita nie je dostupná, a pravidlá refundácie;
+- či platba podporí autorizáciu a následné zúčtovanie;
+- pravidlá predpredaja a jeho vzťah k zakúpeným vstupenkám;
+- kto môže meniť kapacitu a aké obmedzenia platia pri existujúcich rezerváciách a predajoch;
+- úplné pravidlá prideľovania rolí; zadanie výslovne uvádza, že administrátor pridáva manažéra, ale neurčuje celý proces rolí;
+- kritérium, podľa ktorého sa dve samostatne vytvorené udalosti považujú za duplicitné;
+- platobného a e-mailového poskytovateľa a jeho podporu idempotencie;
+- merateľné ciele výkonu, dostupnosti, škálovateľnosti, bezpečnosti, nákladov a prevádzkovej zložitosti.
+
+Žiadna konkrétna databáza, framework, cloud, počet používateľov, SLA, rozpočet ani veľkosť tímu sa týmto ADR nepredpokladá.
+
+## Ďalší krok
+
+Odporúčanie modulárneho monolitu používateľ podporil. Ak sa neskôr zmenia požiadavky alebo rozhodovatelia určia nové priority, ADR treba znovu posúdiť a upraviť. Otvorené produktové a prevádzkové otázky vyššie zostávajú nevyriešené.
