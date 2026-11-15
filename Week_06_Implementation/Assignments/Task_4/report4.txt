@@ -1,0 +1,31 @@
+vstup: ulozene embeddingy z tasku 3.
+Skript sa opýta na vyhľadávaciu otázku a hodnotu n. Ak počet nie je zadaný nastavý sa n na predvolenú hodnotu = 3.
+Pred vytvorenim embeddingu overí limit modelu, teda či sa zadanie zmestí.
+Vytvorí embedding pre zadanie pomocou rovnakého modelu s rovnakou normalizaciou ako v predošlom tasku.
+Potom kontroluje a porovnáva embeddingy a ich rozmery. Potom vypočíta skalárny súčin norm. embeddingov.
+Skóre reprezentuje pravdepodobnosť danej otazky k zvolenemu textu.
+Výsledky sú zoradené podľa skóre a nakoniec vypíše n najlepších.
+
+Zvolil som skalárny súčin pretože embeddingy sú už normalizované. Alternatívou je počítať cosine similarity priamo alebo euklidovskú vzdial.
+Pri väčšom datasete možno zvážiť FAISS na prehľadávanie záznamov.
+
+Testovanie:
+
+
+#PS C:\Users\marti\OneDrive\Dokumenty\swai\AI4SE_Labs_2026> & 'C:\Users\marti\AppData\Local\Microsoft\WindowsApps\python3.10.exe' 'c:/Users/marti/OneDrive/Dokumenty/swai/AI4SE_Labs_2026/Week_06_Implementation/Assignments/Task_4/matching.py'
+#W1115 13:52:54.648000 25704 torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+#Loading weights: 100%|███████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 5025.84it/s]
+#Enter query: Kde su chyby PlaygroundError, OutOfStockError a InvalidTransitionError definovane?
+#Enter value of n: 3
+#Podobnost:  0.71348596
+#Chunk ID:  Week_06_Implementation\Assignments\Task_1\AI4SE_Playground\playground\playground\exceptions.py_1_50
+#Index:  1
+#Text:  """Exception hierarchy for the playground package.""" from __future__ import annotations class PlaygroundError(Exception): """Root of the playground exception hierarchy.""" pass class InventoryError(PlaygroundError): """Generic inventory failure.""" pass class OutOfStockError(InventoryError): """Requested quantity exceeds available stock.""" def __init__(self, sku: str, requested: int, available: int
+#Podobnost:  0.66433305
+#Chunk ID:  Week_06_Implementation\Assignments\Task_1\AI4SE_Playground\playground\tests\test_exceptions.py_1_50
+#Index:  1
+#Text:  """Unit tests for the exceptions module.""" from __future__ import annotations import unittest from playground import exceptions as exc_mod from playground.exceptions import ( DuplicateEntityError, InvalidTransitionError, InventoryError, OutOfStockError, PlaygroundError, UnknownSKUError, ) class ExceptionHierarchyTests(unittest.TestCase): def test_root_derives_from_exception(self) -> None:
+#Podobnost:  0.58894646
+#Chunk ID:  Week_06_Implementation\Assignments\Task_1\AI4SE_Playground\playground\tests\test_exceptions.py_51_100
+#Index:  2
+#Text:  ityError("k"), InvalidTransitionError("a

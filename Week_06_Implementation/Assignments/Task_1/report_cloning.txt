@@ -1,0 +1,3 @@
+Agent použil príkaz git clone https://github.com/Neltharion59/AI4SE_Playground.git v cieľovom priečinku na stiahutie repozitára z GitHub-u.
+Git nadviazal spojenie cez HTTPS a stiahol repozitár.
+Po stiahnutí odstránil .git metadáta aby zahrnul súbory do nadradeného repozitára.

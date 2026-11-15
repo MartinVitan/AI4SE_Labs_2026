@@ -1,0 +1,4 @@
+Repozitár som rozdelil na chunky s veľkosťou 50 riadkov.
+Skript chunky uloží do JSONL súboru.
+Každý chunk okrem textu obsahuje cestu k súboru a čísla prvého - posledného riadku.
+Každý riadok zdrojového súboru patrí nanajvýš do jedného bloku.

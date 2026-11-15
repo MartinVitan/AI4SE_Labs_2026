@@ -1,0 +1,21 @@
+vstup: chunks.jsonl
+vystup: embeddings.jsonl
+
+Spôsob tvorby embeddingov: model Sentence Transformer - repozitár obsahuje kód a testy prevažne v anglickom jazyku. 
+Pomocou tohto viacjazyčného transformera môžem neskôr formulovať otázky po Slovensky.
+Existujú alternatívy ako napr. TF-IDF, ale ak otázky sú formulované inak, nemusel by zachytiť význam (dobrý na presné slová).
+
+Použil som model sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2.
+
+Najskôr som model otestoval na krátkom texte aby som overil či funguje správne a až potom som pomocou neho spracovával celý dataset.
+Na krátkom texte vrátil vektor s korektnými rozmermi, teda embeddingy mali očakávanú veľkosť.
+Limit modelu je 128 tokenov na jeden vstup. Avšak v tomto čísle sú zahrnuté aj dva špeciálne tokeny, teda 128 - 2 = 126 tokenov.
+Medzi jednotlivými časťami som nastavil veľkosť overlapu = 16 tokenov. Toto zabezpečí uchovanie kontextu medzi susednými častami.
+Avšak dôsledkom prekrytia je viac embeddingov. Embeddujem každú časť samostatne a jednotlivé časti nespriemerujem.
+
+Skript následne tokeny prevedie na text a overí, či neprekročil limit po pridaní špeciálnych tokenov.
+Model spracúva najviac 16 (batch size) textov v jednej dávke. Embeddingy normalizujem.
+Každý riadok výstupu = identifikátor pôvodného chunka, poradové číslo jednotlivej časti a ich celkový počet, begin-end pozície v tokenoch, časti textu, zoznam čísel (embedding).
+
+Každý embedding = 384 hodnôt
+Po spracovaní pôvodných 102 chunkov bolo vytvorených 198 častí s embeddingom (198/16 = 12,13 dávok). Každý časť je v stanovenom limite tokenov.
