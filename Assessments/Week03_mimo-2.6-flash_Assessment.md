@@ -1,0 +1,21 @@
+# Assessment by mimo-2.6-flash
+
+# Week 03 Prompting
+- Awarded: 4.5b out of 5b
+- Commentary: All four tasks were completed with real artifacts: three complete framework-based prompts, per-framework prediction outputs, a reimplemented evaluator, a new F1 metric with working code, and programmatic SVG charts whose bar values are numerically consistent with the reported results. Work is honest and self-critical (the student openly discloses the embedded answer column and the modified evaluator). The main weaknesses are the answer (`result`) column embedded in all three prompt payloads, a rather thin comparison report in Task 2, and a Task 4 report that performs rigorous significance testing but omits the required explanation of why the prompts differ (prompt/model/coding-agent factors).
+
+## Task 1
+- Awarded: 1b   (max 1b)
+- Commentary: Three non-overlapping frameworks (RACE, RTF, CO-STAR) were chosen — neither ROSES nor zero-shot — each with a dedicated data file whose structure faithfully follows the framework (ROLE/ACTION/CONTEXT/EXPECTATION, ROLE/TASK/FORMAT, CONTEXT/OBJECTIVE/STYLE/TONE/AUDIENCE/RESPONSE FORMAT), including explicit output-format sections suitable for Task 2's automated evaluation. Task_1.md justifies each choice with expectations and cites the source URLs (frompting.com/frameworks/...). Caveat: every prompt embeds the full CSV including the ground-truth `result` column despite instructing the model to ignore it; this is a real methodology flaw in the delivered prompts, though the student disclosed it and the produced SQL shows genuine query construction rather than answer copying.
+
+## Task 2
+- Awarded: 1b   (max 1b)
+- Commentary: Outputs for all three prompts are stored (RACEout.txt, RTFout.txt, COSTARout.txt, plus a predictions CSV), inference times are measured per prompt (3m12s / 2m32s / 2m35s, model gpt-6-luna), and per-framework accuracies are reported (135/155, 127/155, 136/155) together with a generated SVG bar chart (verified: bar heights encode exactly 87.10 / 81.94 / 87.74 %). Identification of prompt is via filenames and report, not metadata columns inside the data files, and the report is minimal on qualitative comparison, but the task explicitly asks for a "brief report". The student transparently documents modifying the official evaluator to exact restaurant-name match (ignoring inconsistent IDs); relative comparison between prompts remains valid, though absolute accuracy is not comparable to the original metric.
+
+## Task 3
+- Awarded: 1b   (max 1b)
+- Commentary: A defensible metric is proposed (per-question set/multiset F1 over restaurant names capturing partial correctness) with TP/FP/FN definitions, formulas, a worked example, the both-empty edge case (F1 = 100 %), and an explicit statement that it complements rather than replaces the original exact-match metric. f1.py implements it properly: it executes each predicted SQL against the provided SQLite DB, extracts the NAME column, computes precision/recall/F1 per question and macro-averages (RACE 96.76 %, RTF 90.02 %, CO-STAR 95.30 %), matching the values reported in Task 4. The complement/replace discussion is present but only a sentence long, and F1 is a conventional rather than inventive metric, yet all required outputs are met.
+
+## Task 4
+- Awarded: 1.5b   (max 2b)
+- Commentary: Strongest part is the statistics: exact McNemar (binomial sign) test on per-question exact matches, paired Wilcoxon signed-rank test on per-question F1, with a correctly implemented Holm correction and a p-value table with significance flags (RACE–RTF and RTF–CO-STAR F1 differences significant at 0.004 / 0.011; no exact-match difference significant). Two tables and a programmatic two-panel SVG chart (metric + time) exist, and task4_graph.py recomputes all per-question results from the stored predictions, so numbers are reproducible and internally consistent. However, the report is short for a "detailed report", gives almost no interpretation of the significance outcomes, and entirely omits the required explanation of why the prompts differ — no analysis of prompt wording/content as a factor and no treatment of the model or coding agent as factors, which caps the score below full marks.
